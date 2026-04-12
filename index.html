@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federal AI Use Case Comparison: US & Canada</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50%25' y='50%25' font-family='sans-serif' font-size='50' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central'>AI</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --us-color: #60a5fa;
+            --ca-color: #f87171;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent: #818cf8;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0, transparent 50%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f1f5f9 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .policy-alert {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-val {
+            font-size: 2.75rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 1.25rem;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .regime-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .regime-table th,
+        .regime-table td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .regime-table th {
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tag {
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .tag-us {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .tag-ca {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .explorer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            width: 350px;
+            font-size: 1rem;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent);
+        }
+
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.25rem;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .case-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .case-card h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .case-card .agency-tag {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .case-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-note {
+            margin-top: 5rem;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background-color: #1e293b;
+            margin: 4% auto;
+            padding: 3rem;
+            border-radius: 2rem;
+            width: 85%;
+            max-width: 850px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .close {
+            color: var(--text-secondary);
+            float: right;
+            font-size: 2rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 92%;
+                margin: 2% auto;
+                padding: 2rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Federal AI Use Case Comparison</h1>
+            <p>Analyzing Disclosure Trends across the US & Canadian Governments</p>
+        </header>
+
+        <div class="policy-alert">
+            <strong><span style="color: var(--accent);">i</span> About this Dashboard</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--text-secondary);">
+                Governments are increasingly adopting Artificial Intelligence for public services. This dashboard
+                visualizes the publicly declared AI systems used by the United States and Canada.
+                <br><br>
+                <strong>Administrative Context:</strong> The disclosure of AI use is still a new and evolving process
+                for both governments.
+                <br><br>U.S. AI disclosure fundamentally shifted between administrations. The Biden
+                Administration (via <a
+                    href="https://www.federalregister.gov/documents/2020/12/08/2020-27063/promoting-the-use-of-trustworthy-artificial-intelligence-in-the-federal-government"
+                    target="_blank" style="color: var(--accent);">Executive Order 13960</a> and <a
+                    href="https://www.whitehouse.gov/wp-content/uploads/2024/03/M-24-10-Advancing-Governance-Innovation-and-Risk-Management-for-Agency-Use-of-Artificial-Intelligence.pdf"
+                    target="_blank" style="color: var(--accent);">OMB M-24-10</a>) established a detailed,
+                rights-and-safety-focused reporting framework, yielding the comprehensive 2024 dataset shown here. The
+                Trump Administration rescinded these rules in April 2025 (via <a
+                    href="https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf"
+                    target="_blank" style="color: var(--accent);">OMB M-25-21</a>), replacing them with a highly
+                streamlined metric focusing only on "High-Impact" systems to reduce bureaucratic friction. However, as
+                of April 12, 2026, the consolidated 2025 U.S. dataset remains unpublished.
+                <br><br>Canada's Prime Minister
+                Mark Carney launched the nation's <a
+                    href="https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html"
+                    target="_blank" style="color: var(--accent);">inaugural MVP AI Register</a> in November 2025 to
+                begin systematically tracking adoption across federal institutions.
+            </p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="stat-val" style="color: var(--us-color)" id="stat-usa">0</div>
+                <div class="stat-label">US AI Use Cases (2024)</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-val" style="color: var(--ca-color)" id="stat-ca">0</div>
+                <div class="stat-label">Canada AI Register (2025)</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-val" style="color: var(--accent)" id="stat-total">0</div>
+                <div class="stat-label">Total Records Analyzed</div>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <h2>How do the rules compare?</h2>
+            <div style="overflow-x: auto;">
+                <table class="regime-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>United States (2024 Rules)</th>
+                            <th>Canada (2025 Rules)</th>
+                            <th>United States (New 2025 Rules)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Main Focus</strong></td>
+                            <td>Civil Rights & Safety Risks</td>
+                            <td>Tracking General Adoption</td>
+                            <td>"High-Impact" Systems Only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Details Required</strong></td>
+                            <td>Very Detailed (~100 questions)</td>
+                            <td>Basic Overview (~24 questions)</td>
+                            <td>Streamlined / Less paperwork</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Central Data File</strong></td>
+                            <td>Yes (Published)</td>
+                            <td>Yes (Published)</td>
+                            <td><strong>Not Yet Published</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="summary-card">
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies 🖱️</h3>
+                <div style="height: 300px; overflow-y: auto;">
+                    <div style="position: relative; height: 1200px;">
+                        <canvas id="chart-usa"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top Canada Institutions 🖱️
+                </h3>
+                <div style="height: 300px; overflow-y: auto;">
+                    <div style="position: relative; height: 800px;">
+                        <canvas id="chart-ca"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="summary-card">
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click points to filter!">Timeline of Initiation 🖱️
+                </h3>
+                <canvas id="chart-timeline" height="150"></canvas>
+            </div>
+            <div class="summary-card">
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Use Case Categories (AI
+                    Capabilities) 🖱️</h3>
+                <canvas id="chart-categories" height="150"></canvas>
+            </div>
+        </div>
+
+        <div class="explorer-header">
+            <h2>Case Explorer</h2>
+            <div class="filters" style="flex-wrap: wrap;">
+                <input type="text" id="ai-search" class="search-box" placeholder="Search for keywords...">
+                <button class="filter-btn active" data-filter="all">All Countries</button>
+                <button class="filter-btn" data-filter="USA">USA</button>
+                <button class="filter-btn" data-filter="Canada">Canada</button>
+                <button class="filter-btn"
+                    style="background:var(--accent); color:white; border-color:var(--accent); display:none;"
+                    id="clear-filters-btn">Clear Chart Filters</button>
+            </div>
+            <div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--accent);"
+                id="active-filters-display"></div>
+        </div>
+
+        <div id="case-grid" class="case-grid">
+            <!-- Cards injected here -->
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 2rem; gap: 1rem;">
+            <button class="filter-btn" id="btn-prev">Previous</button>
+            <span style="font-weight: 500; font-size: 0.9rem;" id="page-indicator">Page 1</span>
+            <button class="filter-btn" id="btn-next">Next</button>
+            <select id="items-per-page" class="search-box" style="width: auto; padding: 0.4rem 1rem;">
+                <option value="12">12 per page</option>
+                <option value="20" selected>20 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+            </select>
+        </div>
+
+        <div class="footer-note" style="text-align: center; margin-top: 4rem;">
+            <p>This comparison utilizes the latest publicly available comprehensive datasets as of 2026. Data extracted
+                from US CIO / OMB and Treasury Board of Canada.</p>
+            <p style="margin-top: 1rem;">
+                <a href="https://github.com/ombegov" target="_blank"
+                    style="color: var(--us-color); text-decoration: none;">View US GitHub Repo</a> |
+                <a href="https://open.canada.ca" target="_blank"
+                    style="color: var(--ca-color); text-decoration: none;">View Canada Open Portal</a>
+            </p>
+            <p style="font-size:0.8rem; color: var(--text-secondary); margin-top: 2rem;">Generated with Gemini ✨</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let currentCountry = 'all';
+        let chartFilters = {}; // e.g. { agency: 'DHS', year: '2023', category: 'Computer Vision' }
+
+        // Pagination state
+        let currentPage = 1;
+        let itemsPerPage = 20;
+
+        function updateActiveFiltersDisplay() {
+            const display = document.getElementById('active-filters-display');
+            const clearBtn = document.getElementById('clear-filters-btn');
+            const filters = Object.entries(chartFilters).map(([k, v]) => `${k}: ${v}`);
+            if (filters.length > 0) {
+                display.innerHTML = `Active Chart Filters: <strong>${filters.join(' | ')}</strong>`;
+                clearBtn.style.display = 'inline-block';
+            } else {
+                display.innerHTML = '';
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        function toggleChartFilter(key, value) {
+            if (chartFilters[key] === value) {
+                delete chartFilters[key]; // toggle off
+            } else {
+                chartFilters[key] = value;
+            }
+            updateActiveFiltersDisplay();
+            renderGrid();
+        }
+
+        document.getElementById('clear-filters-btn').onclick = () => {
+            chartFilters = {};
+            currentPage = 1;
+            updateActiveFiltersDisplay();
+            renderGrid();
+        };
+
+        async function init() {
+            const response = await fetch('ai_data.json');
+            const data = await response.json();
+            allData = data.items;
+
+            // Stats
+            document.getElementById('stat-usa').innerText = data.stats.usa_count.toLocaleString();
+            document.getElementById('stat-ca').innerText = data.stats.ca_count.toLocaleString();
+            document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.ca_count).toLocaleString();
+
+            // US Chart
+            const chartUsa = new Chart(document.getElementById('chart-usa'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data.stats.usa_agencies),
+                    datasets: [{
+                        label: 'Use Cases',
+                        data: Object.values(data.stats.usa_agencies),
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const label = chartUsa.data.labels[idx];
+                            toggleChartFilter('agency', label);
+                        }
+                    }
+                }
+            });
+
+            // CA Chart
+            const chartCa = new Chart(document.getElementById('chart-ca'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data.stats.ca_agencies),
+                    datasets: [{
+                        label: 'Use Cases',
+                        data: Object.values(data.stats.ca_agencies),
+                        backgroundColor: '#ef4444'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const label = chartCa.data.labels[idx];
+                            toggleChartFilter('agency', label);
+                        }
+                    }
+                }
+            });
+
+            // Category Chart (100% Proportional)
+            const catLabels = Object.keys(data.stats.categories_usa);
+            const usaTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_usa[c] || 0), 0);
+            const caTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_ca[c] || 0), 0);
+
+            const chartCat = new Chart(document.getElementById('chart-categories'), {
+                type: 'bar',
+                data: {
+                    labels: catLabels,
+                    datasets: [
+                        {
+                            label: 'USA (% of total US cases)',
+                            data: catLabels.map(c => Math.round(((data.stats.categories_usa[c] || 0) / usaTotals) * 100)),
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'Canada (% of total CA cases)',
+                            data: catLabels.map(c => Math.round(((data.stats.categories_ca[c] || 0) / caTotals) * 100)),
+                            backgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw + '%' } }
+                    },
+                    scales: { y: { max: 100, ticks: { callback: (val) => val + '%' } } },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const label = chartCat.data.labels[idx];
+                            toggleChartFilter('category', label);
+                        }
+                    }
+                }
+            });
+
+            // Timeline Chart
+            function toCumulative(dataDict) {
+                let sum = 0;
+                return Object.keys(dataDict).reduce((acc, year) => {
+                    sum += dataDict[year];
+                    acc[year] = sum;
+                    return acc;
+                }, {});
+            }
+
+            const cumulativeUsa = toCumulative(data.stats.timeline_usa);
+            const cumulativeCa = toCumulative(data.stats.timeline_ca);
+
+            const allYears = [...new Set([...Object.keys(cumulativeUsa), ...Object.keys(cumulativeCa)])].sort();
+
+            const chartTimeline = new Chart(document.getElementById('chart-timeline'), {
+                type: 'line',
+                data: {
+                    labels: allYears,
+                    datasets: [
+                        {
+                            label: 'USA Cumulative Cases',
+                            data: allYears.map(y => cumulativeUsa[y] || null),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Canada Cumulative Cases',
+                            data: allYears.map(y => cumulativeCa[y] || null),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: true }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const year = chartTimeline.data.labels[idx];
+                            toggleChartFilter('year', year);
+                        }
+                    }
+                }
+            });
+
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('case-grid');
+            const searchTerm = document.getElementById('ai-search').value.toLowerCase();
+
+            const filtered = allData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
+                    item.agency.toLowerCase().includes(searchTerm) ||
+                    item.description.toLowerCase().includes(searchTerm) ||
+                    item.category.toLowerCase().includes(searchTerm);
+                const matchesCountry = currentCountry === 'all' || item.country === currentCountry;
+
+                // Check chart filters
+                const matchesCategory = !chartFilters.category || item.category === chartFilters.category;
+                const matchesAgency = !chartFilters.agency || item.agency === chartFilters.agency;
+                const matchesYear = !chartFilters.year || (item.initiation_year && item.initiation_year.startsWith(chartFilters.year));
+
+                return matchesSearch && matchesCountry && matchesCategory && matchesAgency && matchesYear;
+            });
+
+            // Pagination logic
+            const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const pagedData = filtered.slice(startIdx, startIdx + itemsPerPage);
+
+            document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages} (${filtered.length} total)`;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
+
+            grid.innerHTML = pagedData.map(item => `
+            <div class="case-card" onclick="openModal('${item.id}')">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <span class="tag ${item.country === 'USA' ? 'tag-us' : 'tag-ca'}">${item.country}</span>
+                    <span style="font-size: 0.7rem; color: var(--accent); font-weight: bold; margin-left: 5px;">${item.category}</span>
+                    <span style="font-size: 0.7rem; color: #94a3b8; margin-left: auto;">${item.year}</span>
+                </div>
+                <h3>${item.name}</h3>
+                <div class="agency-tag">${item.agency}</div>
+                <p>${item.description}</p>
+                <div style="margin-top: auto; font-size: 0.75rem; color: var(--accent); font-weight: 600;">
+                    Status: ${item.status}
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function openModal(id) {
+            const item = allData.find(d => d.id === id);
+            const modal = document.getElementById('detailModal');
+            const body = document.getElementById('modal-body');
+
+            body.innerHTML = `
+            <span class="tag ${item.country === 'USA' ? 'tag-us' : 'tag-ca'}" style="margin-bottom: 1rem;">${item.country} Registry (${item.year})</span>
+            <h2 style="margin-top: 0.5rem; font-size: 1.8rem;">${item.name}</h2>
+            <p><strong>Organization:</strong> ${item.full_agency}</p>
+            <p><strong>Current Status:</strong> ${item.status}</p>
+            <p><strong>Category:</strong> ${item.category}</p>
+            <p><strong>Impact/Classification:</strong> ${item.impact}</p>
+            <p><strong>Registry Basis:</strong> ${item.policy}</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 1.5rem 0;">
+            <p style="font-size: 1.1rem; color: #334155; line-height: 1.8;">${item.description}</p>
+        `;
+
+            modal.style.display = "block";
+        }
+
+        // Interactions
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.id !== 'clear-filters-btn' && btn.id !== 'btn-prev' && btn.id !== 'btn-next') {
+                btn.onclick = (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        if (b.id !== 'clear-filters-btn' && b.id !== 'btn-prev' && b.id !== 'btn-next') b.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    currentCountry = e.target.dataset.filter;
+                    currentPage = 1;
+                    renderGrid();
+                };
+            }
+        });
+
+        document.getElementById('ai-search').oninput = () => {
+            currentPage = 1;
+            renderGrid();
+        };
+
+        document.getElementById('items-per-page').onchange = (e) => {
+            itemsPerPage = parseInt(e.target.value);
+            currentPage = 1;
+            renderGrid();
+        };
+
+        document.getElementById('btn-prev').onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderGrid();
+            }
+        };
+
+        document.getElementById('btn-next').onclick = () => {
+            currentPage++;
+            renderGrid();
+        };
+
+        document.querySelector('.close').onclick = () => {
+            document.getElementById('detailModal').style.display = "none";
+        };
+        window.onclick = (event) => {
+            if (event.target == document.getElementById('detailModal')) {
+                document.getElementById('detailModal').style.display = "none";
+            }
+        };
+
+        init();
+    </script>
+
+</body>
+
+</html>
