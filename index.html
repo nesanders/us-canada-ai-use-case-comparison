@@ -372,7 +372,12 @@
                 Mark Carney launched the nation's <a
                     href="https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html"
                     target="_blank" style="color: var(--accent);">inaugural MVP AI Register</a> in November 2025 to
-                begin systematically tracking adoption across federal institutions.
+                begin systematically tracking adoption across federal institutions. While this Register acts as a broad
+                catalogue, Canada manages high-risk deployments through a separate <a
+                    href="https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html"
+                    target="_blank" style="color: var(--accent);">Algorithmic Impact Assessment (AIA)</a> process. The
+                AIA mandates formal, public risk-scoring specifically for automated systems that make administrative
+                decisions about citizens. Only the AI Register data (not the AIA data) is included here.
             </p>
         </div>
 
@@ -501,7 +506,9 @@
                     style="color: var(--ca-color); text-decoration: none;">View Canada Open Portal</a>
             </p>
             <p style="font-size:0.8rem; color: var(--text-secondary); margin-top: 2rem;">
-                <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank" style="color: inherit; text-decoration: underline;">View Source Code on GitHub</a> | Generated with Gemini ✨
+                <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank"
+                    style="color: inherit; text-decoration: underline;">View Source Code on GitHub</a> | Generated with
+                Gemini ✨
             </p>
         </div>
     </div>
@@ -707,7 +714,7 @@
             });
 
             renderGrid();
-            
+
             // Handle deep linking from URL
             const urlParams = new URLSearchParams(window.location.search);
             const caseId = urlParams.get('case');
@@ -765,8 +772,8 @@
 
         function openModal(id) {
             const item = allData.find(d => d.id === id);
-            if(!item) return;
-            
+            if (!item) return;
+
             const modal = document.getElementById('detailModal');
             const body = document.getElementById('modal-body');
 

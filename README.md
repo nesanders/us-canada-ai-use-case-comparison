@@ -15,7 +15,7 @@ The data pipeline aggregates and unifies disparate public compliance registries:
    - **Context**: In April 2025, the Trump administration issued [OMB M-25-21](https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf), drastically streamlining disclosure requirements to focus solely on highly consequential "High-Impact" systems to reduce bureaucratic friction. *As of early 2026, a public consolidated 2025 dataset reflecting these new rules remains unpublished.*
 3. **Canada (2025 Register)**:
    - **Source**: Treasury Board of Canada Secretariat (Open Canada Portal).
-   - **Context**: Launched in late 2025 under Prime Minister Mark Carney, this represents [Canada’s inaugural "MVP" AI Register](https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html) aimed at tracking institutional experiments and scaled production tools systematically.
+   - **Context**: Launched in late 2025 under Prime Minister Mark Carney, this represents [Canada’s inaugural "MVP" AI Register](https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html) aimed at tracking institutional experiments and scaled production tools systematically. While this Register acts as a broad catalogue, Canada manages high-risk deployments through a separate [Algorithmic Impact Assessment (AIA)](https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html) process. The AIA mandates formal, public risk-scoring specifically for automated systems that make administrative decisions about citizens. The AI Register data is included here, not the AIA data.
 
 ## ⚙️ Repository Structure
 
@@ -33,3 +33,7 @@ If you wish to re-run the text categorization or build a new `.json` bundle with
 ```bash
 python3 process_data.py
 ```
+
+## Disclosure
+
+This project was made with AI assistance from Google's Gemini 3.1 Pro (Low) model.
