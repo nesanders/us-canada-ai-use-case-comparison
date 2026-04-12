@@ -1,6 +1,6 @@
 # US & Canada Federal AI Use Case Comparison
 
-**Live Dashboard:** [https://nsanders.me/us-canada-ai-use-case-comparison](https://nsanders.me/us-canada-ai-use-case-comparison)
+**Live Dashboard:** [https://nsanders.me/us-canada-ai-use-case-comparison/](https://nsanders.me/us-canada-ai-use-case-comparison/)
 
 This project provides an interactive, data-driven dashboard comparing the declared adoption of Artificial Intelligence across the federal governments of the United States and Canada. Built using Vanilla HTML/JS and Chart.js, the dashboard analyzes over 2,500 distinct federal AI use cases spanning multiple administration frameworks.
 
