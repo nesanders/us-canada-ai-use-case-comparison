@@ -174,6 +174,40 @@
 </div>
 
 <script>
+    const CSV_BASE = {
+        '2025': 'https://github.com/nesanders/us-canada-ai-use-case-comparison/blob/claude/trump-admin-disclosure-updates-1CNGo/us_inventory_published_2025_retrieved_2026-05-30.csv#L',
+        '2024': 'https://github.com/nesanders/us-canada-ai-use-case-comparison/blob/main/us_inventory_published_2024_retrieved_2026-04-12.csv#L'
+    };
+    const CSV_LINES = {
+        'DOT-1000025': ['2025', 1879], 'DOT-1000064': ['2025', 1867], 'DOT-1000010': ['2025', 1839],
+        'NASA-753':    ['2025', 3647], 'NASA-5':       ['2025', 3128], 'NASA-214':    ['2025', 3495],
+        'NASA-487':    ['2025', 3544], 'NASA-395':     ['2025', 3651],
+        'SEC-34':      ['2025', 3791], 'SEC-26':       ['2025', 3808], 'SEC-24':      ['2025', 3807],
+        'DOE-527':     ['2025',  799], 'DOE-59':       ['2025', 1001],
+        'VA-25-5182':  ['2025', 4784],
+        'DOJ-0160':    ['2025', 1665], 'DOJ-0146':     ['2025', 1608],
+        'US25-1770':   ['2025', 2374], 'US25-1771':    ['2025', 2381], 'US25-2046':   ['2025', 2919],
+        'US25-2852':   ['2025', 3935], 'US25-2853':    ['2025', 3936], 'US25-2854':   ['2025', 3937],
+        'US24-960':    ['2024', 2430], 'US24-963':     ['2024', 2433], 'US24-964':    ['2024', 2434]
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[onclick]').forEach(el => {
+            const m = el.getAttribute('onclick').match(/openModal\('([^']+)'\)/);
+            if (!m) return;
+            const info = CSV_LINES[m[1]];
+            if (!info) return;
+            const link = document.createElement('a');
+            link.href = CSV_BASE[info[0]] + info[1];
+            link.target = '_blank';
+            link.title = 'View source CSV row on GitHub (line ' + info[1] + ')';
+            link.style.cssText = 'color:var(--text-secondary);font-size:0.72rem;margin-left:0.25rem;text-decoration:none;opacity:0.65;vertical-align:super;';
+            link.textContent = '[csv↗]';
+            link.addEventListener('click', e => e.stopPropagation());
+            el.after(link);
+        });
+    });
+
     let allData = [];
 
     fetch('ai_data.json')
