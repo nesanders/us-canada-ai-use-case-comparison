@@ -17,6 +17,7 @@
             --primary-bg: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.7);
             --us-color: #60a5fa;
+            --us25-color: #4ade80;
             --ca-color: #f87171;
             --text-main: #f1f5f9;
             --text-secondary: #94a3b8;
@@ -366,8 +367,13 @@
                 Trump Administration rescinded these rules in April 2025 (via <a
                     href="https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf"
                     target="_blank" style="color: var(--accent);">OMB M-25-21</a>), replacing them with a highly
-                streamlined metric focusing only on "High-Impact" systems to reduce bureaucratic friction. However, as
-                of April 12, 2026, the consolidated 2025 U.S. dataset remains unpublished.
+                streamlined metric focusing only on "High-Impact" systems to reduce bureaucratic friction. The
+                consolidated 2025 U.S. inventory was <a
+                    href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory"
+                    target="_blank" style="color: var(--us25-color);">published in April 2026</a>, documenting 3,611
+                use cases under the new High-Impact AI framework — a nearly 70% increase in raw disclosure count over
+                the 2,133 use cases reported under the prior rules, though direct comparison is complicated by the
+                narrower risk focus and reduced reporting burden of M-25-21.
                 <br><br>Canada's Prime Minister
                 Mark Carney launched the nation's <a
                     href="https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html"
@@ -378,13 +384,19 @@
                     target="_blank" style="color: var(--accent);">Algorithmic Impact Assessment (AIA)</a> process. The
                 AIA mandates formal, public risk-scoring specifically for automated systems that make administrative
                 decisions about citizens. Only the AI Register data (not the AIA data) is included here.
+                <br><br>
+                <a href="analysis.html" style="color: var(--accent); font-weight: 600;">→ Read our record-by-record analysis of the 2025 U.S. inventory</a>
             </p>
         </div>
 
         <div class="summary-grid">
             <div class="summary-card">
                 <div class="stat-val" style="color: var(--us-color)" id="stat-usa">0</div>
-                <div class="stat-label">US AI Use Cases (2024)</div>
+                <div class="stat-label">US AI Use Cases (2024, M-24-10)</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-val" style="color: var(--us25-color)" id="stat-us25">0</div>
+                <div class="stat-label">US AI Use Cases (2025, M-25-21)</div>
             </div>
             <div class="summary-card">
                 <div class="stat-val" style="color: var(--ca-color)" id="stat-ca">0</div>
@@ -425,7 +437,7 @@
                             <td><strong>Central Data File</strong></td>
                             <td>Yes (Published)</td>
                             <td>Yes (Published)</td>
-                            <td><strong>Not Yet Published</strong></td>
+                            <td>Yes (<a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank" style="color:var(--us25-color);">Published Apr 2026</a>)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -434,9 +446,9 @@
 
         <div class="charts-row">
             <div class="summary-card">
-                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies 🖱️</h3>
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">US Agencies — 2024 vs 2025 🖱️</h3>
                 <div style="height: 300px; overflow-y: auto;">
-                    <div style="position: relative; height: 1200px;">
+                    <div style="position: relative; height: 1800px;">
                         <canvas id="chart-usa"></canvas>
                     </div>
                 </div>
@@ -469,8 +481,10 @@
             <h2>Case Explorer</h2>
             <div class="filters" style="flex-wrap: wrap;">
                 <input type="text" id="ai-search" class="search-box" placeholder="Search for keywords...">
-                <button class="filter-btn active" data-filter="all">All Countries</button>
-                <button class="filter-btn" data-filter="USA">USA</button>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="USA">US (all)</button>
+                <button class="filter-btn" data-filter="US2024">US 2024</button>
+                <button class="filter-btn" data-filter="US2025">US 2025</button>
                 <button class="filter-btn" data-filter="Canada">Canada</button>
                 <button class="filter-btn"
                     style="background:var(--accent); color:white; border-color:var(--accent); display:none;"
@@ -507,8 +521,9 @@
             </p>
             <p style="font-size:0.8rem; color: var(--text-secondary); margin-top: 2rem;">
                 <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank"
-                    style="color: inherit; text-decoration: underline;">View Source Code on GitHub</a> | Generated with
-                Gemini ✨
+                    style="color: inherit; text-decoration: underline;">View Source Code on GitHub</a> |
+                <a href="analysis.html" style="color: var(--accent); text-decoration: underline;">Read the 2025 Inventory Analysis →</a> |
+                Built with Gemini & Claude Code ✨
             </p>
         </div>
     </div>
@@ -522,6 +537,32 @@
     </div>
 
     <script>
+        const RAW_URLS = {
+            'us_inventory_published_2025_retrieved_2026-05-30.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/us_inventory_published_2025_retrieved_2026-05-30.csv',
+            'us_inventory_published_2024_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/us_inventory_published_2024_retrieved_2026-04-12.csv',
+            'ca_inventory_published_2025_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/ca_inventory_published_2025_retrieved_2026-04-12.csv',
+        };
+        const rawFileCache = {};
+
+        async function copyRawRow(btn, filename, lineStart, lineEnd) {
+            btn.textContent = 'Fetching…';
+            btn.disabled = true;
+            try {
+                if (!rawFileCache[filename]) {
+                    const res = await fetch(RAW_URLS[filename]);
+                    rawFileCache[filename] = (await res.text()).split('\n');
+                }
+                const lines = rawFileCache[filename];
+                const raw = lines.slice(lineStart - 1, lineEnd).join('\n');
+                await navigator.clipboard.writeText(raw);
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy raw row'; btn.disabled = false; }, 2000);
+            } catch (e) {
+                btn.textContent = 'Error';
+                btn.disabled = false;
+            }
+        }
+
         let allData = [];
         let currentCountry = 'all';
         let chartFilters = {}; // e.g. { agency: 'DHS', year: '2023', category: 'Computer Vision' }
@@ -567,28 +608,44 @@
 
             // Stats
             document.getElementById('stat-usa').innerText = data.stats.usa_count.toLocaleString();
+            document.getElementById('stat-us25').innerText = data.stats.us25_count.toLocaleString();
             document.getElementById('stat-ca').innerText = data.stats.ca_count.toLocaleString();
-            document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.ca_count).toLocaleString();
+            document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.us25_count + data.stats.ca_count).toLocaleString();
 
-            // US Chart
+            // US Agencies — grouped 2024 vs 2025
+            const allUsAgencies = new Set([
+                ...Object.keys(data.stats.usa_agencies),
+                ...Object.keys(data.stats.us25_agencies)
+            ]);
+            const usAgencyLabels = Array.from(allUsAgencies).sort((a, b) => {
+                const totA = (data.stats.usa_agencies[a] || 0) + (data.stats.us25_agencies[a] || 0);
+                const totB = (data.stats.usa_agencies[b] || 0) + (data.stats.us25_agencies[b] || 0);
+                return totB - totA;
+            });
             const chartUsa = new Chart(document.getElementById('chart-usa'), {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(data.stats.usa_agencies),
-                    datasets: [{
-                        label: 'Use Cases',
-                        data: Object.values(data.stats.usa_agencies),
-                        backgroundColor: '#3b82f6'
-                    }]
+                    labels: usAgencyLabels,
+                    datasets: [
+                        {
+                            label: '2024 (M-24-10)',
+                            data: usAgencyLabels.map(a => data.stats.usa_agencies[a] || 0),
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: '2025 (M-25-21)',
+                            data: usAgencyLabels.map(a => data.stats.us25_agencies[a] || 0),
+                            backgroundColor: '#22c55e'
+                        }
+                    ]
                 },
                 options: {
                     indexAxis: 'y',
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend: { display: true, labels: { color: '#f1f5f9' } } },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
-                            const idx = elements[0].index;
-                            const label = chartUsa.data.labels[idx];
+                            const label = usAgencyLabels[elements[0].index];
                             toggleChartFilter('agency', label);
                         }
                     }
@@ -621,8 +678,18 @@
             });
 
             // Category Chart (100% Proportional)
-            const catLabels = Object.keys(data.stats.categories_usa);
+            const allCatKeys = new Set([
+                ...Object.keys(data.stats.categories_usa),
+                ...Object.keys(data.stats.categories_us25),
+                ...Object.keys(data.stats.categories_ca)
+            ]);
+            const catLabels = Array.from(allCatKeys).sort((a, b) => {
+                const totA = (data.stats.categories_usa[a] || 0) + (data.stats.categories_us25[a] || 0) + (data.stats.categories_ca[a] || 0);
+                const totB = (data.stats.categories_usa[b] || 0) + (data.stats.categories_us25[b] || 0) + (data.stats.categories_ca[b] || 0);
+                return totB - totA;
+            });
             const usaTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_usa[c] || 0), 0);
+            const us25Totals = catLabels.reduce((sum, c) => sum + (data.stats.categories_us25[c] || 0), 0);
             const caTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_ca[c] || 0), 0);
 
             const chartCat = new Chart(document.getElementById('chart-categories'), {
@@ -631,9 +698,14 @@
                     labels: catLabels,
                     datasets: [
                         {
-                            label: 'USA (% of total US cases)',
+                            label: 'USA 2024 (% of total US-2024 cases)',
                             data: catLabels.map(c => Math.round(((data.stats.categories_usa[c] || 0) / usaTotals) * 100)),
                             backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'USA 2025 (% of total US-2025 cases)',
+                            data: catLabels.map(c => Math.round(((data.stats.categories_us25[c] || 0) / us25Totals) * 100)),
+                            backgroundColor: '#22c55e'
                         },
                         {
                             label: 'Canada (% of total CA cases)',
@@ -669,9 +741,14 @@
             }
 
             const cumulativeUsa = toCumulative(data.stats.timeline_usa);
+            const cumulativeUs25 = toCumulative(data.stats.timeline_us25);
             const cumulativeCa = toCumulative(data.stats.timeline_ca);
 
-            const allYears = [...new Set([...Object.keys(cumulativeUsa), ...Object.keys(cumulativeCa)])].sort();
+            const allYears = [...new Set([
+                ...Object.keys(cumulativeUsa),
+                ...Object.keys(cumulativeUs25),
+                ...Object.keys(cumulativeCa)
+            ])].sort();
 
             const chartTimeline = new Chart(document.getElementById('chart-timeline'), {
                 type: 'line',
@@ -679,10 +756,18 @@
                     labels: allYears,
                     datasets: [
                         {
-                            label: 'USA Cumulative Cases',
+                            label: 'USA 2024 Cumulative Cases',
                             data: allYears.map(y => cumulativeUsa[y] || null),
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'USA 2025 Cumulative Cases',
+                            data: allYears.map(y => cumulativeUs25[y] || null),
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             fill: true,
                             tension: 0.3
                         },
@@ -732,7 +817,10 @@
                     item.agency.toLowerCase().includes(searchTerm) ||
                     item.description.toLowerCase().includes(searchTerm) ||
                     item.category.toLowerCase().includes(searchTerm);
-                const matchesCountry = currentCountry === 'all' || item.country === currentCountry;
+                const matchesCountry = currentCountry === 'all'
+                    || item.country === currentCountry
+                    || (currentCountry === 'US2024' && item.country === 'USA' && item.year === '2024')
+                    || (currentCountry === 'US2025' && item.country === 'USA' && item.year === '2025');
 
                 // Check chart filters
                 const matchesCategory = !chartFilters.category || item.category === chartFilters.category;
@@ -787,6 +875,12 @@
             <p><strong>Registry Basis:</strong> ${item.policy}</p>
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
             <p style="font-size: 1.1rem; color: var(--text-main); line-height: 1.8;">${item.description}</p>
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                <strong>Source:</strong> ${item.source_file}, line ${item.source_line_start === item.source_line ? item.source_line : item.source_line_start + '–' + item.source_line} &nbsp;
+                <button onclick="copyRawRow(this, '${item.source_file}', ${item.source_line_start}, ${item.source_line})"
+                    style="font-size:0.75rem; padding:0.15rem 0.5rem; background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:4px; cursor:pointer;">Copy raw row</button>
+            </p>
         `;
 
             modal.style.display = "block";
