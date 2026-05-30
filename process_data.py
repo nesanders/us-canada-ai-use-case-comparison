@@ -83,7 +83,7 @@ def process_us_2024(filepath):
                 "name": row.get("Use Case Name", "Unnamed System"),
                 "agency": clean_agency(row.get("Agency", "Unknown")),
                 "full_agency": row.get("Agency", "Unknown"),
-                "description": row.get("Description", "No description provided."),
+                "description": row.get("What is the intended purpose and expected benefits of the AI?", "No description provided."),
                 "status": row.get("Stage of Development", "Unknown"),
                 "impact": row.get("Is the AI use case rights-impacting, safety-impacting, both, or neither?", "Not Disclosed"),
                 "country": "USA",
