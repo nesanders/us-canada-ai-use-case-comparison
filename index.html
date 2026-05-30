@@ -17,6 +17,7 @@
             --primary-bg: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.7);
             --us-color: #60a5fa;
+            --us25-color: #4ade80;
             --ca-color: #f87171;
             --text-main: #f1f5f9;
             --text-secondary: #94a3b8;
@@ -366,8 +367,13 @@
                 Trump Administration rescinded these rules in April 2025 (via <a
                     href="https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf"
                     target="_blank" style="color: var(--accent);">OMB M-25-21</a>), replacing them with a highly
-                streamlined metric focusing only on "High-Impact" systems to reduce bureaucratic friction. However, as
-                of April 12, 2026, the consolidated 2025 U.S. dataset remains unpublished.
+                streamlined metric focusing only on "High-Impact" systems to reduce bureaucratic friction. The
+                consolidated 2025 U.S. inventory was <a
+                    href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory"
+                    target="_blank" style="color: var(--us25-color);">published in April 2026</a>, documenting 3,611
+                use cases under the new High-Impact AI framework — a nearly 70% increase in raw disclosure count over
+                the 2,133 use cases reported under the prior rules, though direct comparison is complicated by the
+                narrower risk focus and reduced reporting burden of M-25-21.
                 <br><br>Canada's Prime Minister
                 Mark Carney launched the nation's <a
                     href="https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html"
@@ -384,7 +390,11 @@
         <div class="summary-grid">
             <div class="summary-card">
                 <div class="stat-val" style="color: var(--us-color)" id="stat-usa">0</div>
-                <div class="stat-label">US AI Use Cases (2024)</div>
+                <div class="stat-label">US AI Use Cases (2024, M-24-10)</div>
+            </div>
+            <div class="summary-card">
+                <div class="stat-val" style="color: var(--us25-color)" id="stat-us25">0</div>
+                <div class="stat-label">US AI Use Cases (2025, M-25-21)</div>
             </div>
             <div class="summary-card">
                 <div class="stat-val" style="color: var(--ca-color)" id="stat-ca">0</div>
@@ -425,7 +435,7 @@
                             <td><strong>Central Data File</strong></td>
                             <td>Yes (Published)</td>
                             <td>Yes (Published)</td>
-                            <td><strong>Not Yet Published</strong></td>
+                            <td>Yes (<a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank" style="color:var(--us25-color);">Published Apr 2026</a>)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -434,7 +444,7 @@
 
         <div class="charts-row">
             <div class="summary-card">
-                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies 🖱️</h3>
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies — 2024 (M-24-10) 🖱️</h3>
                 <div style="height: 300px; overflow-y: auto;">
                     <div style="position: relative; height: 1200px;">
                         <canvas id="chart-usa"></canvas>
@@ -447,6 +457,17 @@
                 <div style="height: 300px; overflow-y: auto;">
                     <div style="position: relative; height: 800px;">
                         <canvas id="chart-ca"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="summary-card" style="width: 100%;">
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies — 2025 (M-25-21) 🖱️</h3>
+                <div style="height: 300px; overflow-y: auto;">
+                    <div style="position: relative; height: 1400px;">
+                        <canvas id="chart-us25"></canvas>
                     </div>
                 </div>
             </div>
@@ -567,8 +588,9 @@
 
             // Stats
             document.getElementById('stat-usa').innerText = data.stats.usa_count.toLocaleString();
+            document.getElementById('stat-us25').innerText = data.stats.us25_count.toLocaleString();
             document.getElementById('stat-ca').innerText = data.stats.ca_count.toLocaleString();
-            document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.ca_count).toLocaleString();
+            document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.us25_count + data.stats.ca_count).toLocaleString();
 
             // US Chart
             const chartUsa = new Chart(document.getElementById('chart-usa'), {
@@ -620,9 +642,44 @@
                 }
             });
 
+            // US 2025 Agency Chart
+            const chartUs25 = new Chart(document.getElementById('chart-us25'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data.stats.us25_agencies),
+                    datasets: [{
+                        label: 'Use Cases',
+                        data: Object.values(data.stats.us25_agencies),
+                        backgroundColor: '#22c55e'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const label = chartUs25.data.labels[idx];
+                            toggleChartFilter('agency', label);
+                        }
+                    }
+                }
+            });
+
             // Category Chart (100% Proportional)
-            const catLabels = Object.keys(data.stats.categories_usa);
+            const allCatKeys = new Set([
+                ...Object.keys(data.stats.categories_usa),
+                ...Object.keys(data.stats.categories_us25),
+                ...Object.keys(data.stats.categories_ca)
+            ]);
+            const catLabels = Array.from(allCatKeys).sort((a, b) => {
+                const totA = (data.stats.categories_usa[a] || 0) + (data.stats.categories_us25[a] || 0) + (data.stats.categories_ca[a] || 0);
+                const totB = (data.stats.categories_usa[b] || 0) + (data.stats.categories_us25[b] || 0) + (data.stats.categories_ca[b] || 0);
+                return totB - totA;
+            });
             const usaTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_usa[c] || 0), 0);
+            const us25Totals = catLabels.reduce((sum, c) => sum + (data.stats.categories_us25[c] || 0), 0);
             const caTotals = catLabels.reduce((sum, c) => sum + (data.stats.categories_ca[c] || 0), 0);
 
             const chartCat = new Chart(document.getElementById('chart-categories'), {
@@ -631,9 +688,14 @@
                     labels: catLabels,
                     datasets: [
                         {
-                            label: 'USA (% of total US cases)',
+                            label: 'USA 2024 (% of total US-2024 cases)',
                             data: catLabels.map(c => Math.round(((data.stats.categories_usa[c] || 0) / usaTotals) * 100)),
                             backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'USA 2025 (% of total US-2025 cases)',
+                            data: catLabels.map(c => Math.round(((data.stats.categories_us25[c] || 0) / us25Totals) * 100)),
+                            backgroundColor: '#22c55e'
                         },
                         {
                             label: 'Canada (% of total CA cases)',
@@ -669,9 +731,14 @@
             }
 
             const cumulativeUsa = toCumulative(data.stats.timeline_usa);
+            const cumulativeUs25 = toCumulative(data.stats.timeline_us25);
             const cumulativeCa = toCumulative(data.stats.timeline_ca);
 
-            const allYears = [...new Set([...Object.keys(cumulativeUsa), ...Object.keys(cumulativeCa)])].sort();
+            const allYears = [...new Set([
+                ...Object.keys(cumulativeUsa),
+                ...Object.keys(cumulativeUs25),
+                ...Object.keys(cumulativeCa)
+            ])].sort();
 
             const chartTimeline = new Chart(document.getElementById('chart-timeline'), {
                 type: 'line',
@@ -679,10 +746,18 @@
                     labels: allYears,
                     datasets: [
                         {
-                            label: 'USA Cumulative Cases',
+                            label: 'USA 2024 Cumulative Cases',
                             data: allYears.map(y => cumulativeUsa[y] || null),
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'USA 2025 Cumulative Cases',
+                            data: allYears.map(y => cumulativeUs25[y] || null),
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             fill: true,
                             tension: 0.3
                         },

@@ -74,6 +74,36 @@ def process_us_2024(filepath):
             })
     return results
 
+def process_us_2025(filepath):
+    results = []
+    with open(filepath, 'r', encoding='utf-8-sig', errors='replace') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            agency_abbr = row.get("agency", "").strip()
+            agency_full = row.get("agency_name", agency_abbr).strip()
+            description = row.get("problem_solved", "").strip()
+            if not description:
+                description = row.get("benefits", "").strip()
+            if not description:
+                description = "No description provided."
+            is_hi = row.get("is_high_impact", "").strip().upper()
+            impact = "High-Impact" if is_hi == "Y" else ("Not High-Impact" if is_hi == "N" else "Not Disclosed")
+            results.append({
+                "id": row.get("id", f"US25-{len(results)}").strip(),
+                "name": row.get("use_case_name", "Unnamed System").strip(),
+                "agency": agency_abbr if agency_abbr else clean_agency(agency_full),
+                "full_agency": agency_full,
+                "description": description,
+                "status": row.get("development_stage", "Unknown").strip(),
+                "impact": impact,
+                "country": "USA",
+                "year": "2025",
+                "initiation_year": row.get("operational_date", "Unknown").strip(),
+                "policy": "M-25-21",
+                "category": categorize_use_case(row.get("use_case_name", ""), description)
+            })
+    return results
+
 def process_ca_2025(filepath):
     results = []
     with open(filepath, 'r', encoding='utf-8-sig', errors='replace') as f:
@@ -97,46 +127,61 @@ def process_ca_2025(filepath):
 
 def main():
     us_data = process_us_2024("us_inventory_published_2024_retrieved_2026-04-12.csv")
+    us25_data = process_us_2025("us_inventory_published_2025_retrieved_2026-05-30.csv")
     ca_data = process_ca_2025("ca_inventory_published_2025_retrieved_2026-04-12.csv")
-    
-    combined = us_data + ca_data
-    
+
+    combined = us_data + us25_data + ca_data
+
     # Generate stats for charts
     stats = {
         "usa_count": len(us_data),
+        "us25_count": len(us25_data),
         "ca_count": len(ca_data),
         "usa_agencies": {},
+        "us25_agencies": {},
         "ca_agencies": {},
         "timeline_usa": {},
+        "timeline_us25": {},
         "timeline_ca": {},
         "categories_usa": {},
+        "categories_us25": {},
         "categories_ca": {}
     }
-    
+
     for item in us_data:
         stats["usa_agencies"][item["agency"]] = stats["usa_agencies"].get(item["agency"], 0) + 1
         stats["categories_usa"][item["category"]] = stats["categories_usa"].get(item["category"], 0) + 1
         yr = item["initiation_year"][:4] if item["initiation_year"] else "Unknown"
-        if yr.isdigit() and 2000 <= int(yr) <= 2025:
+        if yr.isdigit() and 2000 <= int(yr) <= 2026:
             stats["timeline_usa"][yr] = stats["timeline_usa"].get(yr, 0) + 1
+
+    for item in us25_data:
+        stats["us25_agencies"][item["agency"]] = stats["us25_agencies"].get(item["agency"], 0) + 1
+        stats["categories_us25"][item["category"]] = stats["categories_us25"].get(item["category"], 0) + 1
+        yr = item["initiation_year"][:4] if item["initiation_year"] else "Unknown"
+        if yr.isdigit() and 2000 <= int(yr) <= 2026:
+            stats["timeline_us25"][yr] = stats["timeline_us25"].get(yr, 0) + 1
 
     for item in ca_data:
         stats["ca_agencies"][item["agency"]] = stats["ca_agencies"].get(item["agency"], 0) + 1
         stats["categories_ca"][item["category"]] = stats["categories_ca"].get(item["category"], 0) + 1
         yr = item["initiation_year"][:4] if item["initiation_year"] else "Unknown"
-        if yr.isdigit() and 2000 <= int(yr) <= 2025:
+        if yr.isdigit() and 2000 <= int(yr) <= 2026:
             stats["timeline_ca"][yr] = stats["timeline_ca"].get(yr, 0) + 1
 
     # Sort agencies
     stats["usa_agencies"] = dict(sorted(stats["usa_agencies"].items(), key=lambda x: x[1], reverse=True))
+    stats["us25_agencies"] = dict(sorted(stats["us25_agencies"].items(), key=lambda x: x[1], reverse=True))
     stats["ca_agencies"] = dict(sorted(stats["ca_agencies"].items(), key=lambda x: x[1], reverse=True))
-    
+
     # Sort timelines
     stats["timeline_usa"] = dict(sorted(stats["timeline_usa"].items()))
+    stats["timeline_us25"] = dict(sorted(stats["timeline_us25"].items()))
     stats["timeline_ca"] = dict(sorted(stats["timeline_ca"].items()))
 
     # Sort categories
     stats["categories_usa"] = dict(sorted(stats["categories_usa"].items(), key=lambda x: x[1], reverse=True))
+    stats["categories_us25"] = dict(sorted(stats["categories_us25"].items(), key=lambda x: x[1], reverse=True))
     stats["categories_ca"] = dict(sorted(stats["categories_ca"].items(), key=lambda x: x[1], reverse=True))
 
     output = {
@@ -147,7 +192,7 @@ def main():
     with open("ai_data.json", "w") as f:
         json.dump(output, f, indent=2)
     
-    print(f"Processed {len(combined)} total use cases.")
+    print(f"Processed {len(combined)} total use cases ({len(us_data)} US 2024, {len(us25_data)} US 2025, {len(ca_data)} Canada).")
 
 if __name__ == "__main__":
     main()
