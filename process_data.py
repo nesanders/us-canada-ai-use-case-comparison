@@ -119,7 +119,9 @@ def process_us_2024(filepath):
                 "year": "2024",
                 "initiation_year": parse_year(row.get("Date Initiated", "")),
                 "policy": "M-24-10 / EO 13960",
-                "category": categorize_use_case(row.get("Use Case Name", ""), row.get("Description", "No description provided."))
+                "category": categorize_use_case(row.get("Use Case Name", ""), row.get("Description", "No description provided.")),
+                "source_file": os.path.basename(filepath),
+                "source_line": reader.reader.line_num,
             })
     return results
 
@@ -158,7 +160,9 @@ def process_us_2025(filepath):
                 "year": "2025",
                 "initiation_year": parse_year(row.get("operational_date", "")),
                 "policy": "M-25-21",
-                "category": categorize_use_case(row.get("use_case_name", ""), description)
+                "category": categorize_use_case(row.get("use_case_name", ""), description),
+                "source_file": os.path.basename(filepath),
+                "source_line": reader.reader.line_num,
             })
     return results
 
@@ -179,7 +183,9 @@ def process_ca_2025(filepath):
                 "year": "2025",
                 "initiation_year": row.get("status_date", "Unknown"),
                 "policy": "Treasury Board AI Register MVP",
-                "category": categorize_use_case(row.get("name_ai_system_en", ""), row.get("description_ai_system_en", "") + " " + row.get("ai_system_capabilities_en", ""))
+                "category": categorize_use_case(row.get("name_ai_system_en", ""), row.get("description_ai_system_en", "") + " " + row.get("ai_system_capabilities_en", "")),
+                "source_file": os.path.basename(filepath),
+                "source_line": reader.reader.line_num,
             })
     return results
 

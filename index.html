@@ -849,6 +849,11 @@
             <p><strong>Registry Basis:</strong> ${item.policy}</p>
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
             <p style="font-size: 1.1rem; color: var(--text-main); line-height: 1.8;">${item.description}</p>
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                <strong>Source row:</strong> ${item.source_file}, line ${item.source_line}<br>
+                <code style="font-size:0.75rem; color: var(--accent);">sed -n '${item.source_line}p' ${item.source_file}</code>
+            </p>
         `;
 
             modal.style.display = "block";

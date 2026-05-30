@@ -228,6 +228,11 @@
             <p><strong>Policy:</strong> ${item.policy}</p>
             <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:1.2rem 0;">
             <p style="font-size:1rem;line-height:1.8;color:#f1f5f9;">${item.description}</p>
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:1.2rem 0;">
+            <p style="font-size:0.8rem;color:#94a3b8;">
+                <strong>Source row:</strong> ${item.source_file}, line ${item.source_line}<br>
+                <code style="font-size:0.75rem;color:#818cf8;">sed -n '${item.source_line}p' ${item.source_file}</code>
+            </p>
         `;
         document.getElementById('recordModal').style.display = 'block';
         return false;
