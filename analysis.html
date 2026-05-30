@@ -174,6 +174,31 @@
 </div>
 
 <script>
+    const RAW_URLS = {
+        'us_inventory_published_2025_retrieved_2026-05-30.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/claude/trump-admin-disclosure-updates-1CNGo/us_inventory_published_2025_retrieved_2026-05-30.csv',
+        'us_inventory_published_2024_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/us_inventory_published_2024_retrieved_2026-04-12.csv',
+        'ca_inventory_published_2025_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/ca_inventory_published_2025_retrieved_2026-04-12.csv',
+    };
+    const rawFileCache = {};
+
+    async function copyRawRow(btn, filename, lineStart, lineEnd) {
+        btn.textContent = 'Fetching…';
+        btn.disabled = true;
+        try {
+            if (!rawFileCache[filename]) {
+                const res = await fetch(RAW_URLS[filename]);
+                rawFileCache[filename] = (await res.text()).split('\n');
+            }
+            const raw = rawFileCache[filename].slice(lineStart - 1, lineEnd).join('\n');
+            await navigator.clipboard.writeText(raw);
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy raw row'; btn.disabled = false; }, 2000);
+        } catch (e) {
+            btn.textContent = 'Error';
+            btn.disabled = false;
+        }
+    }
+
     const CSV_BASE = {
         '2025': 'https://github.com/nesanders/us-canada-ai-use-case-comparison/blob/claude/trump-admin-disclosure-updates-1CNGo/us_inventory_published_2025_retrieved_2026-05-30.csv#L',
         '2024': 'https://github.com/nesanders/us-canada-ai-use-case-comparison/blob/main/us_inventory_published_2024_retrieved_2026-04-12.csv#L'
@@ -230,8 +255,9 @@
             <p style="font-size:1rem;line-height:1.8;color:#f1f5f9;">${item.description}</p>
             <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:1.2rem 0;">
             <p style="font-size:0.8rem;color:#94a3b8;">
-                <strong>Source row:</strong> ${item.source_file}, line ${item.source_line}<br>
-                <code style="font-size:0.75rem;color:#818cf8;">sed -n '${item.source_line}p' ${item.source_file}</code>
+                <strong>Source:</strong> ${item.source_file}, line ${item.source_line_start === item.source_line ? item.source_line : item.source_line_start + '–' + item.source_line} &nbsp;
+                <button onclick="copyRawRow(this,'${item.source_file}',${item.source_line_start},${item.source_line})"
+                    style="font-size:0.75rem;padding:0.15rem 0.5rem;background:transparent;border:1px solid #818cf8;color:#818cf8;border-radius:4px;cursor:pointer;">Copy raw row</button>
             </p>
         `;
         document.getElementById('recordModal').style.display = 'block';

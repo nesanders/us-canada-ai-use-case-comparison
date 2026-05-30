@@ -106,7 +106,9 @@ def process_us_2024(filepath):
     results = []
     with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
         reader = csv.DictReader(f)
+        prev_end = 1
         for row in reader:
+            end = reader.reader.line_num
             results.append({
                 "id": f"US24-{len(results)}",
                 "name": row.get("Use Case Name", "Unnamed System"),
@@ -121,14 +123,17 @@ def process_us_2024(filepath):
                 "policy": "M-24-10 / EO 13960",
                 "category": categorize_use_case(row.get("Use Case Name", ""), row.get("Description", "No description provided.")),
                 "source_file": os.path.basename(filepath),
-                "source_line": reader.reader.line_num,
+                "source_line": end,
+                "source_line_start": prev_end + 1,
             })
+            prev_end = end
     return results
 
 def process_us_2025(filepath):
     results = []
     with open(filepath, 'r', encoding='utf-8-sig', errors='replace') as f:
         reader = csv.DictReader(f)
+        prev_end = 1
         for row in reader:
             agency_abbr = row.get("agency", "").strip()
             agency_full = row.get("agency_name", agency_abbr).strip()
@@ -163,14 +168,18 @@ def process_us_2025(filepath):
                 "category": categorize_use_case(row.get("use_case_name", ""), description),
                 "source_file": os.path.basename(filepath),
                 "source_line": reader.reader.line_num,
+                "source_line_start": prev_end + 1,
             })
+            prev_end = reader.reader.line_num
     return results
 
 def process_ca_2025(filepath):
     results = []
     with open(filepath, 'r', encoding='utf-8-sig', errors='replace') as f:
         reader = csv.DictReader(f)
+        prev_end = 1
         for row in reader:
+            end = reader.reader.line_num
             results.append({
                 "id": row.get("ai_register_id", f"CA25-{len(results)}"),
                 "name": row.get("name_ai_system_en", "Unnamed System"),
@@ -185,8 +194,10 @@ def process_ca_2025(filepath):
                 "policy": "Treasury Board AI Register MVP",
                 "category": categorize_use_case(row.get("name_ai_system_en", ""), row.get("description_ai_system_en", "") + " " + row.get("ai_system_capabilities_en", "")),
                 "source_file": os.path.basename(filepath),
-                "source_line": reader.reader.line_num,
+                "source_line": end,
+                "source_line_start": prev_end + 1,
             })
+            prev_end = end
     return results
 
 def main():
