@@ -125,8 +125,8 @@
 
     <div class="finding">
         <strong>HHS deployed AI to scan grant materials for compliance with Executive Orders 14151 and 14168.</strong>
-        Two ACF systems — one reviewing position descriptions, one reviewing grant applications — explicitly cite EO 14151 ("Ending Radical and Wasteful Government DEI Programs") and EO 14168 ("Defending Women From Gender Ideology Extremism"). Both are classified Not High-Impact. A companion HRSA system in pre-deployment will evaluate funding opportunities against "dynamically-changing Executive Orders." <em>These records have no unique IDs in the published data, preventing direct citation.</em>
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, HHS cluster — no record IDs available</div>
+        Two HHS/ACF systems — <a href="#" onclick="openModal('US25-1770');return false;">one reviewing position descriptions</a> and <a href="#" onclick="openModal('US25-1771');return false;">one reviewing grant applications</a> — explicitly cite EO 14151 ("Ending Radical and Wasteful Government DEI Programs and Preferencing") and EO 14168 ("Defending Women From Gender Ideology Extremism and Restoring Biological Truth to the Federal Government"). Both are deployed on Palantir's ACF Upstream platform (grant materials also uses Credal); both are classified Not High-Impact. A companion HRSA system, <a href="#" onclick="openModal('US25-2046');return false;">NOFO Compliance Assistant</a>, is in pre-deployment and will evaluate Notice of Funding Opportunities against "dynamically-changing Executive Orders (EO) and OMB memos to ensure NOFO compliance with White House priorities."
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — records <a href="#" onclick="openModal('US25-1770');return false;">US25-1770</a>, <a href="#" onclick="openModal('US25-1771');return false;">US25-1771</a>, <a href="#" onclick="openModal('US25-2046');return false;">US25-2046</a> (IDs are synthetic; these records have no agency-assigned IDs in the source data)</div>
     </div>
 
     <div class="finding">
@@ -148,9 +148,9 @@
     </div>
 
     <div class="finding">
-        <strong>State Department retired three systems — "Violence Against Civilians Model," "Mass Mobilization Model," and "Senturion Alpha" — with no description.</strong>
-        All three are listed as Not High-Impact, Retired, with blank descriptions. The names suggest predictive political risk or population-behavior modeling. No context, rationale for retirement, or operational history is provided. <em>These records have no unique IDs in the published data.</em>
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, State cluster — no record IDs available</div>
+        <strong>State Department retired three geopolitical AI systems — "Violence Against Civilians Model," "Mass Mobilization Model," and "Senturion Alpha" — with blank descriptions.</strong>
+        All three are listed as Not High-Impact, Retired, with no description, no rationale, and no operational history in the 2025 submission. All three were operated by the Bureau of Conflict and Stabilization Operations (CSO). The 2024 inventory — where all three appeared as active systems — provides context: <a href="#" onclick="openModal('US24-960');return false;">Violence Against Civilians Model</a> "forecast mass civilian killings for the upcoming quarter and year for each country globally"; <a href="#" onclick="openModal('US24-964');return false;">Mass Mobilization Model</a> predicted "mass mobilizations (protests and riots) for each country globally"; <a href="#" onclick="openModal('US24-963');return false;">Senturion Alpha</a> "identifies where key decision makers fall on an issue spectrum and who influences whom," simulating political dynamics to estimate influence. The 2025 retirement entries (<a href="#" onclick="openModal('US25-2852');return false;">US25-2852</a>, <a href="#" onclick="openModal('US25-2853');return false;">US25-2853</a>, <a href="#" onclick="openModal('US25-2854');return false;">US25-2854</a>) contain only the system names.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — 2025 records US25-2852/2853/2854 (synthetic IDs; no agency IDs in source); 2024 descriptions in records US24-960, US24-963, US24-964</div>
     </div>
 
     <h2>Multiple Major Agencies Filed Near-Blank Submissions</h2>
@@ -159,7 +159,7 @@
 
     <h2>Note on Citations</h2>
 
-    <p>Record ID links open a detail card directly on this page. For 704 records without IDs (HHS, State, TVA, ED, GSA, SSA), individual citation is not possible — a limitation of the source data itself. All records are in the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB's GitHub repository</a>; the raw CSV is also in this project's <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank">source repository</a>.</p>
+    <p>Record ID links open a detail card directly on this page. For 704 records (HHS, State, TVA, ED, GSA, SSA) that were filed without unique identifiers, this dashboard assigns synthetic IDs (US25-<em>n</em>, based on row position in the source CSV). These IDs are not official government identifiers. All records are in the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB's GitHub repository</a>; the raw CSV is also in this project's <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank">source repository</a>.</p>
 
     <footer>
         Based on full record-by-record review of the 2025 Federal Agency AI Use Case Inventory (OMB M-25-21). &nbsp;|&nbsp; <a href="index.html">Return to dashboard</a>

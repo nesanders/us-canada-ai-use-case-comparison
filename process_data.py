@@ -147,7 +147,7 @@ def process_us_2025(filepath):
             else:
                 impact = "Not Disclosed"
             results.append({
-                "id": row.get("id", f"US25-{len(results)}").strip(),
+                "id": row.get("id", "").strip() or f"US25-{len(results)}",
                 "name": row.get("use_case_name", "Unnamed System").strip(),
                 "agency": agency_normalized,
                 "full_agency": agency_full,
