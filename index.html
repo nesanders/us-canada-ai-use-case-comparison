@@ -384,6 +384,8 @@
                     target="_blank" style="color: var(--accent);">Algorithmic Impact Assessment (AIA)</a> process. The
                 AIA mandates formal, public risk-scoring specifically for automated systems that make administrative
                 decisions about citizens. Only the AI Register data (not the AIA data) is included here.
+                <br><br>
+                <a href="analysis.html" style="color: var(--accent); font-weight: 600;">→ Read our record-by-record analysis of the 2025 U.S. inventory</a>
             </p>
         </div>
 
@@ -444,9 +446,9 @@
 
         <div class="charts-row">
             <div class="summary-card">
-                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies — 2024 (M-24-10) 🖱️</h3>
+                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">US Agencies — 2024 vs 2025 🖱️</h3>
                 <div style="height: 300px; overflow-y: auto;">
-                    <div style="position: relative; height: 1200px;">
+                    <div style="position: relative; height: 1800px;">
                         <canvas id="chart-usa"></canvas>
                     </div>
                 </div>
@@ -457,17 +459,6 @@
                 <div style="height: 300px; overflow-y: auto;">
                     <div style="position: relative; height: 800px;">
                         <canvas id="chart-ca"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="charts-row">
-            <div class="summary-card" style="width: 100%;">
-                <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Top US Agencies — 2025 (M-25-21) 🖱️</h3>
-                <div style="height: 300px; overflow-y: auto;">
-                    <div style="position: relative; height: 1400px;">
-                        <canvas id="chart-us25"></canvas>
                     </div>
                 </div>
             </div>
@@ -490,8 +481,10 @@
             <h2>Case Explorer</h2>
             <div class="filters" style="flex-wrap: wrap;">
                 <input type="text" id="ai-search" class="search-box" placeholder="Search for keywords...">
-                <button class="filter-btn active" data-filter="all">All Countries</button>
-                <button class="filter-btn" data-filter="USA">USA</button>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="USA">US (all)</button>
+                <button class="filter-btn" data-filter="US2024">US 2024</button>
+                <button class="filter-btn" data-filter="US2025">US 2025</button>
                 <button class="filter-btn" data-filter="Canada">Canada</button>
                 <button class="filter-btn"
                     style="background:var(--accent); color:white; border-color:var(--accent); display:none;"
@@ -530,7 +523,7 @@
                 <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank"
                     style="color: inherit; text-decoration: underline;">View Source Code on GitHub</a> |
                 <a href="analysis.html" style="color: var(--accent); text-decoration: underline;">Read the 2025 Inventory Analysis →</a> |
-                Generated with Gemini ✨
+                Built with Gemini & Claude Code ✨
             </p>
         </div>
     </div>
@@ -593,25 +586,40 @@
             document.getElementById('stat-ca').innerText = data.stats.ca_count.toLocaleString();
             document.getElementById('stat-total').innerText = (data.stats.usa_count + data.stats.us25_count + data.stats.ca_count).toLocaleString();
 
-            // US Chart
+            // US Agencies — grouped 2024 vs 2025
+            const allUsAgencies = new Set([
+                ...Object.keys(data.stats.usa_agencies),
+                ...Object.keys(data.stats.us25_agencies)
+            ]);
+            const usAgencyLabels = Array.from(allUsAgencies).sort((a, b) => {
+                const totA = (data.stats.usa_agencies[a] || 0) + (data.stats.us25_agencies[a] || 0);
+                const totB = (data.stats.usa_agencies[b] || 0) + (data.stats.us25_agencies[b] || 0);
+                return totB - totA;
+            });
             const chartUsa = new Chart(document.getElementById('chart-usa'), {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(data.stats.usa_agencies),
-                    datasets: [{
-                        label: 'Use Cases',
-                        data: Object.values(data.stats.usa_agencies),
-                        backgroundColor: '#3b82f6'
-                    }]
+                    labels: usAgencyLabels,
+                    datasets: [
+                        {
+                            label: '2024 (M-24-10)',
+                            data: usAgencyLabels.map(a => data.stats.usa_agencies[a] || 0),
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: '2025 (M-25-21)',
+                            data: usAgencyLabels.map(a => data.stats.us25_agencies[a] || 0),
+                            backgroundColor: '#22c55e'
+                        }
+                    ]
                 },
                 options: {
                     indexAxis: 'y',
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend: { display: true, labels: { color: '#f1f5f9' } } },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
-                            const idx = elements[0].index;
-                            const label = chartUsa.data.labels[idx];
+                            const label = usAgencyLabels[elements[0].index];
                             toggleChartFilter('agency', label);
                         }
                     }
@@ -637,31 +645,6 @@
                         if (elements.length > 0) {
                             const idx = elements[0].index;
                             const label = chartCa.data.labels[idx];
-                            toggleChartFilter('agency', label);
-                        }
-                    }
-                }
-            });
-
-            // US 2025 Agency Chart
-            const chartUs25 = new Chart(document.getElementById('chart-us25'), {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(data.stats.us25_agencies),
-                    datasets: [{
-                        label: 'Use Cases',
-                        data: Object.values(data.stats.us25_agencies),
-                        backgroundColor: '#22c55e'
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    onClick: (e, elements) => {
-                        if (elements.length > 0) {
-                            const idx = elements[0].index;
-                            const label = chartUs25.data.labels[idx];
                             toggleChartFilter('agency', label);
                         }
                     }
@@ -808,7 +791,10 @@
                     item.agency.toLowerCase().includes(searchTerm) ||
                     item.description.toLowerCase().includes(searchTerm) ||
                     item.category.toLowerCase().includes(searchTerm);
-                const matchesCountry = currentCountry === 'all' || item.country === currentCountry;
+                const matchesCountry = currentCountry === 'all'
+                    || item.country === currentCountry
+                    || (currentCountry === 'US2024' && item.country === 'USA' && item.year === '2024')
+                    || (currentCountry === 'US2025' && item.country === 'USA' && item.year === '2025');
 
                 // Check chart filters
                 const matchesCategory = !chartFilters.category || item.category === chartFilters.category;

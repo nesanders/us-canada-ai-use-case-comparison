@@ -72,6 +72,10 @@
             margin: 1.5rem 0;
         }
         footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15,23,42,0.9); backdrop-filter: blur(8px); }
+        .modal-inner { background-color: #1e293b; margin: 5% auto; padding: 2.5rem; border-radius: 1.5rem; width: 88%; max-width: 820px; max-height: 82vh; overflow-y: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: var(--text-main); position: relative; }
+        .modal-close { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.8rem; cursor: pointer; color: var(--text-secondary); line-height: 1; }
+        .modal-close:hover { color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -97,20 +101,20 @@
 
     <div class="finding">
         <strong>DOT: Zero High-Impact designations across 70 aviation and transportation safety records.</strong>
-        This includes <a href="index.html?case=DOT-1000025" target="_blank">MARS</a> — an AI system being developed to support reduced aircraft separation standards in terminal airspace — and AI used for fatigue risk assessment of air traffic controllers. DOT's own record descriptions invoke safety-of-life language; the impact classification does not reflect this.
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOT cluster (records DOT-1000025, DOT-1000064, DOT-1000010)</div>
+        This includes <a href="#" onclick="openModal('DOT-1000025');return false;">MARS</a> — an AI system being developed to support reduced aircraft separation standards in terminal airspace — and AI used for fatigue risk assessment of air traffic controllers. DOT's own record descriptions invoke safety-of-life language; the impact classification does not reflect this.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOT cluster (records <a href="#" onclick="openModal('DOT-1000025');return false;">DOT-1000025</a>, <a href="#" onclick="openModal('DOT-1000064');return false;">DOT-1000064</a>, <a href="#" onclick="openModal('DOT-1000010');return false;">DOT-1000010</a>)</div>
     </div>
 
     <div class="finding">
         <strong>NASA: One High-Impact system across 425 records — a physical security camera.</strong>
-        <a href="index.html?case=NASA-753" target="_blank">NASA-753</a> (Intelligent Camera Analytics, a facility security system deployed in 2016) is the agency's only unambiguous High-Impact designation. Systems classified Not High-Impact include: <a href="index.html?case=NASA-5" target="_blank">Autoresolver</a> (autonomous air traffic separation), <a href="index.html?case=NASA-214" target="_blank">AEGIS</a> (autonomous target-selection AI deployed on Mars rovers since 2010), <a href="index.html?case=NASA-487" target="_blank">the deep-space astronaut medical assistant</a> (formerly "Doc in a Box"), and <a href="index.html?case=NASA-395" target="_blank">INSIGHT</a> (autonomous operations of high-pressure gas systems at a rocket test facility).
+        <a href="#" onclick="openModal('NASA-753');return false;">NASA-753</a> (Intelligent Camera Analytics, a facility security system deployed in 2016) is the agency's only unambiguous High-Impact designation. Systems classified Not High-Impact include: <a href="#" onclick="openModal('NASA-5');return false;">Autoresolver</a> (autonomous air traffic separation), <a href="#" onclick="openModal('NASA-214');return false;">AEGIS</a> (autonomous target-selection AI deployed on Mars rovers since 2010), <a href="#" onclick="openModal('NASA-487');return false;">the deep-space astronaut medical assistant</a> (formerly "Doc in a Box"), and <a href="#" onclick="openModal('NASA-395');return false;">INSIGHT</a> (autonomous operations of high-pressure gas systems at a rocket test facility).
         <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, NASA cluster</div>
     </div>
 
     <div class="finding">
         <strong>SEC: Zero High-Impact designations across 60 records, including deployed enforcement-targeting AI.</strong>
-        SEC-34 describes an AI identifying accounts with trading activity preceding material price moves "warranting further investigation." SEC-26 flags accounts for examiner review. Both deployed; neither High-Impact.
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, SEC cluster (records SEC-34, SEC-26, SEC-24)</div>
+        <a href="#" onclick="openModal('SEC-34');return false;">SEC-34</a> describes an AI identifying accounts with trading activity preceding material price moves "warranting further investigation." <a href="#" onclick="openModal('SEC-26');return false;">SEC-26</a> flags accounts for examiner review. Both deployed; neither High-Impact.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, SEC cluster (records <a href="#" onclick="openModal('SEC-34');return false;">SEC-34</a>, <a href="#" onclick="openModal('SEC-26');return false;">SEC-26</a>, <a href="#" onclick="openModal('SEC-24');return false;">SEC-24</a>)</div>
     </div>
 
     <h2>Even Correctly Classified Systems Lack Required Documentation</h2>
@@ -127,19 +131,19 @@
 
     <div class="finding">
         <strong>DOE's ACORN system autonomously controls nuclear reactor processes and is classified Not High-Impact.</strong>
-        <a href="index.html?case=DOE-527" target="_blank">ACORN (DOE-527)</a> "automatically identifies process models from simulation and operational data, solves for optimal control actions that can achieve user-defined objectives, executes actions and observes system responses" in a reactor context at Idaho National Laboratory. A separate record, <a href="index.html?case=DOE-59" target="_blank">the Cognitive Prescreen Tool (DOE-59)</a>, has been deployed since 2019 assisting classifiers in determining the classification level of documents — potentially including nuclear weapons design information — and is also Not High-Impact.
+        <a href="#" onclick="openModal('DOE-527');return false;">ACORN (DOE-527)</a> "automatically identifies process models from simulation and operational data, solves for optimal control actions that can achieve user-defined objectives, executes actions and observes system responses" in a reactor context at Idaho National Laboratory. A separate record, <a href="#" onclick="openModal('DOE-59');return false;">the Cognitive Prescreen Tool (DOE-59)</a>, has been deployed since 2019 assisting classifiers in determining the classification level of documents — potentially including nuclear weapons design information — and is also Not High-Impact.
         <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOE cluster</div>
     </div>
 
     <div class="finding">
         <strong>The VA is applying acoustic-linguistic AI to Veterans Crisis Line calls.</strong>
-        Record VA-25-5182 describes a pre-deployment system processing crisis hotline audio using "linguistic, acoustic, and contextual features" to score suicide risk, also incorporating external environmental data such as noise pollution. It is classified High-Impact. The disclosure does not describe whether callers are notified or what safeguards govern the scoring outputs.
-        <div class="cite">Source: <a href="index.html?case=VA-25-5182" target="_blank">VA-25-5182</a> in our dashboard; <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a></div>
+        Record <a href="#" onclick="openModal('VA-25-5182');return false;">VA-25-5182</a> describes a pre-deployment system processing crisis hotline audio using "linguistic, acoustic, and contextual features" to score suicide risk, also incorporating external environmental data such as noise pollution. It is classified High-Impact. The disclosure does not describe whether callers are notified or what safeguards govern the scoring outputs.
+        <div class="cite">Source: <a href="#" onclick="openModal('VA-25-5182');return false;">VA-25-5182</a>; <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a></div>
     </div>
 
     <div class="finding">
         <strong>PATTERN, the First Step Act recidivism tool, appears twice under the same record ID with conflicting impact classifications.</strong>
-        <a href="index.html?case=DOJ-0160" target="_blank">DOJ-0160</a> appears once as Not High-Impact and once as High-Impact in the published data. PATTERN scores directly affect early release eligibility and programming placement for approximately 150,000 people in federal custody. The <a href="index.html?case=DOJ-0146" target="_blank">BRAVO Classification system (DOJ-0146)</a> uses statistical prediction to assign security levels to newly admitted inmates before any conduct has occurred inside a facility; it is classified High-Impact with no disclosure of model inputs, training data, or demographic disparate-impact analysis.
+        <a href="#" onclick="openModal('DOJ-0160');return false;">DOJ-0160</a> appears once as Not High-Impact and once as High-Impact in the published data. PATTERN scores directly affect early release eligibility and programming placement for approximately 150,000 people in federal custody. The <a href="#" onclick="openModal('DOJ-0146');return false;">BRAVO Classification system (DOJ-0146)</a> uses statistical prediction to assign security levels to newly admitted inmates before any conduct has occurred inside a facility; it is classified High-Impact with no disclosure of model inputs, training data, or demographic disparate-impact analysis.
         <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOJ cluster</div>
     </div>
 
@@ -155,11 +159,53 @@
 
     <h2>Note on Citations</h2>
 
-    <p>Record ID links open directly in our dashboard. For 704 records without IDs (HHS, State, TVA, ED, GSA, SSA), individual citation is not possible — a limitation of the source data itself. All records are in the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB's GitHub repository</a>; the raw CSV is also in this project's <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank">source repository</a>.</p>
+    <p>Record ID links open a detail card directly on this page. For 704 records without IDs (HHS, State, TVA, ED, GSA, SSA), individual citation is not possible — a limitation of the source data itself. All records are in the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB's GitHub repository</a>; the raw CSV is also in this project's <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank">source repository</a>.</p>
 
     <footer>
         Based on full record-by-record review of the 2025 Federal Agency AI Use Case Inventory (OMB M-25-21). &nbsp;|&nbsp; <a href="index.html">Return to dashboard</a>
     </footer>
 </div>
+
+<div id="recordModal" class="modal">
+    <div class="modal-inner">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    let allData = [];
+
+    fetch('ai_data.json')
+        .then(r => r.json())
+        .then(data => { allData = data.items; });
+
+    function openModal(id) {
+        const item = allData.find(d => d.id === id);
+        if (!item) { alert('Record ' + id + ' not found in loaded data.'); return; }
+        const body = document.getElementById('modal-body');
+        body.innerHTML = `
+            <span style="display:inline-block;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);border-radius:4px;padding:0.2rem 0.6rem;font-size:0.8rem;margin-bottom:1rem;">${item.country} Registry (${item.year})</span>
+            <h2 style="margin-top:0.5rem;font-size:1.5rem;font-family:system-ui,sans-serif;">${item.name}</h2>
+            <p><strong>Organization:</strong> ${item.full_agency}</p>
+            <p><strong>Status:</strong> ${item.status}</p>
+            <p><strong>Category:</strong> ${item.category}</p>
+            <p><strong>Impact Classification:</strong> ${item.impact}</p>
+            <p><strong>Policy:</strong> ${item.policy}</p>
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:1.2rem 0;">
+            <p style="font-size:1rem;line-height:1.8;color:#f1f5f9;">${item.description}</p>
+        `;
+        document.getElementById('recordModal').style.display = 'block';
+        return false;
+    }
+
+    function closeModal() {
+        document.getElementById('recordModal').style.display = 'none';
+    }
+
+    window.onclick = (e) => {
+        if (e.target === document.getElementById('recordModal')) closeModal();
+    };
+</script>
 </body>
 </html>

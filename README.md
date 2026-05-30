@@ -20,12 +20,13 @@ The data pipeline aggregates and unifies disparate public compliance registries:
 
 ## ⚙️ Repository Structure
 
-* `index.html`: The interactive single-page dashboard featuring infinite-scroll analytics, case filtering, and responsive visualizations via Chart.js.
-* `process_data.py`: A Python automation script that parses raw government CSVs, applies a Natural Language Processing (NLP) taxonomy to identify common application capabilities (e.g., Computer Vision, Generative AI), and structures the data for the web UI.
+* `index.html`: The interactive single-page dashboard featuring case filtering, grouped agency charts, and responsive visualizations via Chart.js.
+* `analysis.html`: A record-by-record analysis of the 2025 U.S. inventory — findings on High-Impact classification failures, missing safeguard documentation, and notable individual disclosures.
+* `process_data.py`: A Python script that parses raw government CSVs, normalizes agency names to consistent abbreviations across years, applies an NLP taxonomy to categorize use cases, and builds `ai_data.json`.
 * `ai_data.json`: The compiled frontend JSON payload built by the data processor.
-* `us_inventory_published_2024_retrieved_2026-04-12.csv`: The raw source data for U.S. departments (Biden/M-24-10 rules).
-* `us_inventory_published_2025_retrieved_2026-05-30.csv`: The raw source data for U.S. departments (Trump/M-25-21 rules).
-* `ca_inventory_published_2025_retrieved_2026-04-12.csv`: The raw source data for Canadian institutions.
+* `us_inventory_published_2024_retrieved_2026-04-12.csv`: Raw U.S. AI inventory under Biden/M-24-10 rules.
+* `us_inventory_published_2025_retrieved_2026-05-30.csv`: Raw U.S. AI inventory under Trump/M-25-21 rules (3,611 records across 56 agencies).
+* `ca_inventory_published_2025_retrieved_2026-04-12.csv`: Raw Canadian AI register data.
 
 ## 🚀 How to Run Locally
 
@@ -38,4 +39,4 @@ python3 process_data.py
 
 ## Disclosure
 
-This project was made with AI assistance from Google's Gemini 3.1 Pro (Low) model.
+This project was built with AI assistance from Google's Gemini and Anthropic's Claude Code.

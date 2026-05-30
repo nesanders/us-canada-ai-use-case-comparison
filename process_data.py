@@ -4,21 +4,50 @@ import os
 
 def clean_agency(agency):
     if not agency: return "Unknown"
-    # Simplify common agency names for charting
     mapping = {
-        "Department of Homeland Security": "DHS",
-        "Department of Justice": "DOJ",
-        "Department of State": "State",
-        "Department of Veterans Affairs": "VA",
-        "Department of Commerce": "Commerce",
-        "Department of Education": "Education",
-        "Department of Energy": "Energy",
         "Department of Health and Human Services": "HHS",
-        "Department of the Treasury": "Treasury",
+        "Department of Veterans Affairs": "VA",
+        "Department of Energy": "DOE",
+        "Department of Justice": "DOJ",
+        "Department of the Interior": "DOI",
+        "Department of Homeland Security": "DHS",
+        "Department of Commerce": "DOC",
+        "Department of Agriculture": "USDA",
+        "Department of the Treasury": "TREAS",
+        "Department of Transportation": "DOT",
+        "Department of State": "STATE",
+        "Department of Education": "ED",
+        "Department of Labor": "DOL",
+        "Department of Housing and Urban Development": "HUD",
         "General Services Administration": "GSA",
+        "Social Security Administration": "SSA",
         "National Aeronautics and Space Administration": "NASA",
         "Environmental Protection Agency": "EPA",
-        "Social Security Administration": "SSA",
+        "Securities and Exchange Commission": "SEC",
+        "Federal Deposit Insurance Corporation": "FDIC",
+        "Tennessee Valley Authority": "TVA",
+        "Board of Governors of the Federal Reserve System": "FRB",
+        "Federal Reserve Board": "FRB",
+        "United States Agency for International Development": "USAID",
+        "Small Business Administration": "SBA",
+        "Commodity Futures Trading Commission": "CFTC",
+        "Federal Trade Commission": "FTC",
+        "Nuclear Regulatory Commission": "NRC",
+        "National Science Foundation": "NSF",
+        "Federal Communications Commission": "FCC",
+        "Federal Energy Regulatory Commission": "FERC",
+        "Federal Housing Finance Agency": "FHFA",
+        "Election Assistance Commission": "EAC",
+        "Farm Credit Administration": "FCA",
+        "National Archives and Records Administration": "NARA",
+        "National Credit Union Administration": "NCUA",
+        "National Endowment for the Arts": "NEA",
+        "National Indian Gaming Commission": "NIGC",
+        "National Transportation Safety Board": "NTSB",
+        "Office of Special Counsel": "OSC",
+        "Occupational Safety and Health Review Commission": "OSHRC",
+        "Pension Benefit Guaranty Corporation": "PBGC",
+        "Surface Transportation Board": "STB",
         "Canada / Service canadien d'appui aux tribunaux administratifs": "ATSSC",
         "Fisheries and Oceans Canada": "DFO",
         "Agriculture and Agri-Food Canada": "AAFC",
@@ -29,7 +58,7 @@ def clean_agency(agency):
     for full, short in mapping.items():
         if full in agency:
             return short
-    return agency.split(" / ")[0] # For Canadian bilingual names
+    return agency.split(" / ")[0]
 
 def parse_year(date_str):
     """Extract 4-digit year from mixed date formats."""
@@ -101,6 +130,7 @@ def process_us_2025(filepath):
         for row in reader:
             agency_abbr = row.get("agency", "").strip()
             agency_full = row.get("agency_name", agency_abbr).strip()
+            agency_normalized = clean_agency(agency_full) if agency_full else agency_abbr
             description = row.get("problem_solved", "").strip()
             if not description:
                 description = row.get("benefits", "").strip()
@@ -119,7 +149,7 @@ def process_us_2025(filepath):
             results.append({
                 "id": row.get("id", f"US25-{len(results)}").strip(),
                 "name": row.get("use_case_name", "Unnamed System").strip(),
-                "agency": agency_abbr if agency_abbr else clean_agency(agency_full),
+                "agency": agency_normalized,
                 "full_agency": agency_full,
                 "description": description,
                 "status": row.get("development_stage", "Unknown").strip(),
