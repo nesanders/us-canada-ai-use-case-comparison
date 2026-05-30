@@ -1,8 +1,9 @@
 # US & Canada Federal AI Use Case Comparison
 
-**Live Dashboard:** [https://nsanders.me/us-canada-ai-use-case-comparison/](https://nsanders.me/us-canada-ai-use-case-comparison/)
+**Live Dashboard:** [https://nsanders.me/us-canada-ai-use-case-comparison/](https://nsanders.me/us-canada-ai-use-case-comparison/)  
+**2025 Inventory Analysis:** [https://nsanders.me/us-canada-ai-use-case-comparison/analysis.html](https://nsanders.me/us-canada-ai-use-case-comparison/analysis.html)
 
-This project provides an interactive, data-driven dashboard comparing the declared adoption of Artificial Intelligence across the federal governments of the United States and Canada. Built using Vanilla HTML/JS and Chart.js, the dashboard analyzes over 6,100 distinct federal AI use cases spanning multiple administration frameworks.
+This project provides an interactive, data-driven dashboard comparing the declared adoption of Artificial Intelligence across the federal governments of the United States and Canada. Built using vanilla HTML/JS and Chart.js, the dashboard covers 6,153 distinct federal AI use cases across three disclosure datasets and two administration frameworks.
 
 ## 📊 Data Sources & Policy Context
 
@@ -17,6 +18,19 @@ The data pipeline aggregates and unifies disparate public compliance registries:
 3. **Canada (2025 Register)**:
    - **Source**: Treasury Board of Canada Secretariat (Open Canada Portal).
    - **Context**: Launched in late 2025 under Prime Minister Mark Carney, this represents [Canada’s inaugural "MVP" AI Register](https://www.canada.ca/en/treasury-board-secretariat/news/2025/11/canada-launches-first-register-of-ai-uses-in-federal-government.html) aimed at tracking institutional experiments and scaled production tools systematically. While this Register acts as a broad catalogue, Canada manages high-risk deployments through a separate [Algorithmic Impact Assessment (AIA)](https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html) process. The AIA mandates formal, public risk-scoring specifically for automated systems that make administrative decisions about citizens. The AI Register data is included here, not the AIA data.
+
+## 🔍 2025 Inventory Analysis
+
+The companion [`analysis.html`](https://nsanders.me/us-canada-ai-use-case-comparison/analysis.html) page presents a record-by-record review of all 3,611 disclosures in the 2025 U.S. inventory. Key findings include:
+
+- **The High-Impact designation is being applied inconsistently.** DOT filed zero High-Impact records across 70 aviation and transportation safety systems. NASA filed one — a physical security camera — while classifying autonomous air traffic separation, Mars rover targeting AI, and a rocket facility gas system controller as Not High-Impact.
+- **71.5% of correctly-classified High-Impact records are missing all required safeguard fields** (testing, impact assessment, independent review, monitoring, failsafe, and appeal process).
+- **HHS deployed AI on Palantir infrastructure to scan position descriptions and grant applications for compliance with EOs 14151 and 14168.** Both systems are classified Not High-Impact. A companion HRSA system will evaluate funding opportunities against "dynamically-changing Executive Orders."
+- **DOE's ACORN system autonomously executes control actions in a nuclear reactor context** and is classified Not High-Impact.
+- **The State Department retired three geopolitical forecasting systems** — a global civilian-killing forecaster, a protest/riot predictor, and a political-influence network mapper — with blank descriptions and no retirement rationale.
+- **704 records (19%) were filed without unique IDs**, preventing direct citation; this project assigns synthetic row-position IDs (US25-*n*) to make them addressable.
+
+All record links in the analysis open in-page detail cards and include direct links to the exact source CSV row on GitHub.
 
 ## ⚙️ Repository Structure
 
