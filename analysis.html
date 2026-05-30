@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis: What the 2025 U.S. AI Inventory Reveals</title>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --card-bg: #1e293b;
+            --us-color: #60a5fa;
+            --us25-color: #4ade80;
+            --ca-color: #f87171;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent: #818cf8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+        header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        header h1 {
+            font-size: 1.9rem; font-weight: 700; margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--us-color), var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--text-secondary); font-size: 0.95rem; }
+        nav { margin-bottom: 2rem; font-size: 0.9rem; color: var(--text-secondary); }
+        nav a { color: var(--us-color); text-decoration: none; }
+        nav a:hover { text-decoration: underline; }
+        h2 {
+            font-size: 1.2rem; font-weight: 700; margin: 2.2rem 0 0.6rem;
+            color: var(--accent);
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        p { margin-bottom: 1rem; color: var(--text-main); }
+        a { color: var(--us25-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        a.src { color: var(--accent); font-size: 0.85rem; }
+        .finding {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin: 1.2rem 0;
+        }
+        .finding strong { color: var(--us25-color); }
+        .finding .cite { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.4rem; }
+        .finding .cite a { color: var(--accent); }
+        .stat-row { display: flex; gap: 1rem; margin: 1.2rem 0; flex-wrap: wrap; }
+        .stat-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 0.8rem 1.2rem; flex: 1; min-width: 140px;
+            text-align: center;
+        }
+        .stat-num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem; }
+        .note {
+            background: rgba(129,140,248,0.08);
+            border: 1px solid rgba(129,140,248,0.25);
+            border-radius: 6px; padding: 0.8rem 1rem;
+            font-size: 0.88rem; color: var(--text-secondary);
+            margin: 1.5rem 0;
+        }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav>← <a href="index.html">Back to Dashboard</a></nav>
+    <header>
+        <h1>What the 2025 U.S. AI Inventory Reveals</h1>
+        <p>An independent record-by-record review of all 3,611 disclosures under OMB M-25-21 &mdash; May 2026</p>
+    </header>
+
+    <p>The Trump administration published the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">2025 Federal Agency AI Use Case Inventory</a> in April 2026. We reviewed every record across all 56 agencies. Findings below link directly to records where IDs exist; 704 records (19%) — covering HHS, State, TVA, ED, GSA, and SSA — were filed without unique identifiers, making individual citation impossible for those agencies.</p>
+
+    <div class="stat-row">
+        <div class="stat-box"><div class="stat-num">3,611</div><div class="stat-label">Records reviewed</div></div>
+        <div class="stat-box"><div class="stat-num">445</div><div class="stat-label">High-Impact designations</div></div>
+        <div class="stat-box"><div class="stat-num">71.5%</div><div class="stat-label">High-Impact records missing required safeguard fields</div></div>
+        <div class="stat-box"><div class="stat-num">704</div><div class="stat-label">Records with no unique ID</div></div>
+    </div>
+
+    <h2>The High-Impact Framework Is Not Working</h2>
+
+    <p>M-25-21 replaced broad disclosure requirements with a narrower focus on "High-Impact" systems — defined as AI with significant consequences for individuals' rights, safety, or access to services. The data shows this designation is being applied inconsistently, and in several cases, in apparent contradiction with an agency's own description of the system.</p>
+
+    <div class="finding">
+        <strong>DOT: Zero High-Impact designations across 70 aviation and transportation safety records.</strong>
+        This includes <a href="index.html?case=DOT-1000025" target="_blank">MARS</a> — an AI system being developed to support reduced aircraft separation standards in terminal airspace — and AI used for fatigue risk assessment of air traffic controllers. DOT's own record descriptions invoke safety-of-life language; the impact classification does not reflect this.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOT cluster (records DOT-1000025, DOT-1000064, DOT-1000010)</div>
+    </div>
+
+    <div class="finding">
+        <strong>NASA: One High-Impact system across 425 records — a physical security camera.</strong>
+        <a href="index.html?case=NASA-753" target="_blank">NASA-753</a> (Intelligent Camera Analytics, a facility security system deployed in 2016) is the agency's only unambiguous High-Impact designation. Systems classified Not High-Impact include: <a href="index.html?case=NASA-5" target="_blank">Autoresolver</a> (autonomous air traffic separation), <a href="index.html?case=NASA-214" target="_blank">AEGIS</a> (autonomous target-selection AI deployed on Mars rovers since 2010), <a href="index.html?case=NASA-487" target="_blank">the deep-space astronaut medical assistant</a> (formerly "Doc in a Box"), and <a href="index.html?case=NASA-395" target="_blank">INSIGHT</a> (autonomous operations of high-pressure gas systems at a rocket test facility).
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, NASA cluster</div>
+    </div>
+
+    <div class="finding">
+        <strong>SEC: Zero High-Impact designations across 60 records, including deployed enforcement-targeting AI.</strong>
+        SEC-34 describes an AI identifying accounts with trading activity preceding material price moves "warranting further investigation." SEC-26 flags accounts for examiner review. Both deployed; neither High-Impact.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, SEC cluster (records SEC-34, SEC-26, SEC-24)</div>
+    </div>
+
+    <h2>Even Correctly Classified Systems Lack Required Documentation</h2>
+
+    <p>Of the 445 High-Impact records, 71.5% are missing all required safeguard fields: testing conducted, impact assessment, independent review, ongoing monitoring, failsafe presence, and appeal process. The one field with universal completion is <em>public consultation</em>, the least operationally specific. Even where agencies correctly identify a consequential system, the documentation required to evaluate its governance is mostly absent.</p>
+
+    <h2>Notable Individual Disclosures</h2>
+
+    <div class="finding">
+        <strong>HHS deployed AI to scan grant materials for compliance with Executive Orders 14151 and 14168.</strong>
+        Two ACF systems — one reviewing position descriptions, one reviewing grant applications — explicitly cite EO 14151 ("Ending Radical and Wasteful Government DEI Programs") and EO 14168 ("Defending Women From Gender Ideology Extremism"). Both are classified Not High-Impact. A companion HRSA system in pre-deployment will evaluate funding opportunities against "dynamically-changing Executive Orders." <em>These records have no unique IDs in the published data, preventing direct citation.</em>
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, HHS cluster — no record IDs available</div>
+    </div>
+
+    <div class="finding">
+        <strong>DOE's ACORN system autonomously controls nuclear reactor processes and is classified Not High-Impact.</strong>
+        <a href="index.html?case=DOE-527" target="_blank">ACORN (DOE-527)</a> "automatically identifies process models from simulation and operational data, solves for optimal control actions that can achieve user-defined objectives, executes actions and observes system responses" in a reactor context at Idaho National Laboratory. A separate record, <a href="index.html?case=DOE-59" target="_blank">the Cognitive Prescreen Tool (DOE-59)</a>, has been deployed since 2019 assisting classifiers in determining the classification level of documents — potentially including nuclear weapons design information — and is also Not High-Impact.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOE cluster</div>
+    </div>
+
+    <div class="finding">
+        <strong>The VA is applying acoustic-linguistic AI to Veterans Crisis Line calls.</strong>
+        Record VA-25-5182 describes a pre-deployment system processing crisis hotline audio using "linguistic, acoustic, and contextual features" to score suicide risk, also incorporating external environmental data such as noise pollution. It is classified High-Impact. The disclosure does not describe whether callers are notified or what safeguards govern the scoring outputs.
+        <div class="cite">Source: <a href="index.html?case=VA-25-5182" target="_blank">VA-25-5182</a> in our dashboard; <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a></div>
+    </div>
+
+    <div class="finding">
+        <strong>PATTERN, the First Step Act recidivism tool, appears twice under the same record ID with conflicting impact classifications.</strong>
+        <a href="index.html?case=DOJ-0160" target="_blank">DOJ-0160</a> appears once as Not High-Impact and once as High-Impact in the published data. PATTERN scores directly affect early release eligibility and programming placement for approximately 150,000 people in federal custody. The <a href="index.html?case=DOJ-0146" target="_blank">BRAVO Classification system (DOJ-0146)</a> uses statistical prediction to assign security levels to newly admitted inmates before any conduct has occurred inside a facility; it is classified High-Impact with no disclosure of model inputs, training data, or demographic disparate-impact analysis.
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, DOJ cluster</div>
+    </div>
+
+    <div class="finding">
+        <strong>State Department retired three systems — "Violence Against Civilians Model," "Mass Mobilization Model," and "Senturion Alpha" — with no description.</strong>
+        All three are listed as Not High-Impact, Retired, with blank descriptions. The names suggest predictive political risk or population-behavior modeling. No context, rationale for retirement, or operational history is provided. <em>These records have no unique IDs in the published data.</em>
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a>, State cluster — no record IDs available</div>
+    </div>
+
+    <h2>Multiple Major Agencies Filed Near-Blank Submissions</h2>
+
+    <p>Commerce filed 223 records — all "Not Disclosed" for impact, all blank status, 89% with no description — including NOAA's hurricane track models and flood prediction AI. NIST, the agency that writes the federal AI Risk Management Framework, disclosed three use cases consisting only of cloud vendor names. TVA submitted 59 records with blank IDs, blank status, and no impact classifications for a portfolio that includes nuclear plant operations AI and dam safety monitoring.</p>
+
+    <h2>Note on Citations</h2>
+
+    <p>Record ID links open directly in our dashboard. For 704 records without IDs (HHS, State, TVA, ED, GSA, SSA), individual citation is not possible — a limitation of the source data itself. All records are in the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB's GitHub repository</a>; the raw CSV is also in this project's <a href="https://github.com/nesanders/us-canada-ai-use-case-comparison" target="_blank">source repository</a>.</p>
+
+    <footer>
+        Based on full record-by-record review of the 2025 Federal Agency AI Use Case Inventory (OMB M-25-21). &nbsp;|&nbsp; <a href="index.html">Return to dashboard</a>
+    </footer>
+</div>
+</body>
+</html>
