@@ -31,6 +31,26 @@ def clean_agency(agency):
             return short
     return agency.split(" / ")[0] # For Canadian bilingual names
 
+def parse_year(date_str):
+    """Extract 4-digit year from mixed date formats."""
+    if not date_str:
+        return "Unknown"
+    s = date_str.strip()
+    # ISO: '2025-09-08 00:00:00' or '2025-09-08'
+    if len(s) >= 4 and s[:4].isdigit() and (len(s) == 4 or s[4] in ('-', '/')):
+        return s[:4]
+    # MM/DD/YYYY or M/D/YYYY
+    parts = s.split('/')
+    if len(parts) == 3 and parts[2][:4].isdigit():
+        return parts[2][:4]
+    # 'Jan-2024', 'Sep-2023'
+    if '-' in s:
+        tail = s.rsplit('-', 1)[-1]
+        if tail[:4].isdigit():
+            return tail[:4]
+    return "Unknown"
+
+
 def categorize_use_case(text, description):
     if description.strip() == "No description provided." and len(text.split()) < 4:
         return "Missing Disclosure Details"
@@ -68,7 +88,7 @@ def process_us_2024(filepath):
                 "impact": row.get("Is the AI use case rights-impacting, safety-impacting, both, or neither?", "Not Disclosed"),
                 "country": "USA",
                 "year": "2024",
-                "initiation_year": row.get("Date Initiated", "").split("/")[-1] if "/" in row.get("Date Initiated", "") else row.get("Date Initiated", "Unknown"),
+                "initiation_year": parse_year(row.get("Date Initiated", "")),
                 "policy": "M-24-10 / EO 13960",
                 "category": categorize_use_case(row.get("Use Case Name", ""), row.get("Description", "No description provided."))
             })
@@ -86,8 +106,16 @@ def process_us_2025(filepath):
                 description = row.get("benefits", "").strip()
             if not description:
                 description = "No description provided."
-            is_hi = row.get("is_high_impact", "").strip().upper()
-            impact = "High-Impact" if is_hi == "Y" else ("Not High-Impact" if is_hi == "N" else "Not Disclosed")
+            is_hi_raw = row.get("is_high_impact", "").strip()
+            is_hi_lower = is_hi_raw.lower()
+            if "presumed" in is_hi_lower:
+                impact = "Presumed High-Impact"
+            elif "not high" in is_hi_lower:
+                impact = "Not High-Impact"
+            elif "high" in is_hi_lower:
+                impact = "High-Impact"
+            else:
+                impact = "Not Disclosed"
             results.append({
                 "id": row.get("id", f"US25-{len(results)}").strip(),
                 "name": row.get("use_case_name", "Unnamed System").strip(),
@@ -98,7 +126,7 @@ def process_us_2025(filepath):
                 "impact": impact,
                 "country": "USA",
                 "year": "2025",
-                "initiation_year": row.get("operational_date", "Unknown").strip(),
+                "initiation_year": parse_year(row.get("operational_date", "")),
                 "policy": "M-25-21",
                 "category": categorize_use_case(row.get("use_case_name", ""), description)
             })
