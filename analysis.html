@@ -127,8 +127,8 @@
 
     <div class="finding">
         <strong>HHS deployed AI to scan grant materials for compliance with Executive Orders 14151 and 14168.</strong>
-        Two HHS/ACF systems — <a href="#" onclick="openModal('US25-1770');return false;">one reviewing position descriptions</a> and <a href="#" onclick="openModal('US25-1771');return false;">one reviewing grant applications</a> — explicitly cite EO 14151 ("Ending Radical and Wasteful Government DEI Programs and Preferencing") and EO 14168 ("Defending Women From Gender Ideology Extremism and Restoring Biological Truth to the Federal Government"). Both are deployed on Palantir's ACF Upstream platform (grant materials also uses Credal); both are classified Not High-Impact. A companion HRSA system, <a href="#" onclick="openModal('US25-2046');return false;">NOFO Compliance Assistant</a>, is in pre-deployment and will evaluate Notice of Funding Opportunities against "dynamically-changing Executive Orders (EO) and OMB memos to ensure NOFO compliance with White House priorities."
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — records <a href="#" onclick="openModal('US25-1770');return false;">US25-1770</a>, <a href="#" onclick="openModal('US25-1771');return false;">US25-1771</a>, <a href="#" onclick="openModal('US25-2046');return false;">US25-2046</a> (IDs are synthetic; these records have no agency-assigned IDs in the source data)</div>
+        Two HHS/ACF systems — <a href="#" onclick="openModal('US25-2374');return false;">one reviewing position descriptions</a> and <a href="#" onclick="openModal('US25-2381');return false;">one reviewing grant applications</a> — explicitly cite EO 14151 ("Ending Radical and Wasteful Government DEI Programs and Preferencing") and EO 14168 ("Defending Women From Gender Ideology Extremism and Restoring Biological Truth to the Federal Government"). Both are deployed on Palantir's ACF Upstream platform (grant materials also uses Credal); both are classified Not High-Impact. A companion HRSA system, <a href="#" onclick="openModal('US25-2919');return false;">NOFO Compliance Assistant</a>, is in pre-deployment and will evaluate Notice of Funding Opportunities against "dynamically-changing Executive Orders (EO) and OMB memos to ensure NOFO compliance with White House priorities."
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — records <a href="#" onclick="openModal('US25-2374');return false;">US25-2374</a>, <a href="#" onclick="openModal('US25-2381');return false;">US25-2381</a>, <a href="#" onclick="openModal('US25-2919');return false;">US25-2919</a> (IDs are synthetic row-position references; these records have no agency-assigned IDs in the source data)</div>
     </div>
 
     <div class="finding">
@@ -151,7 +151,7 @@
 
     <div class="finding">
         <strong>State Department retired three geopolitical AI systems — "Violence Against Civilians Model," "Mass Mobilization Model," and "Senturion Alpha" — with blank descriptions.</strong>
-        All three are listed as Not High-Impact, Retired, with no description, no rationale, and no operational history in the 2025 submission. All three were operated by the Bureau of Conflict and Stabilization Operations (CSO). The 2024 inventory — where all three appeared as active systems — provides context: <a href="#" onclick="openModal('US24-960');return false;">Violence Against Civilians Model</a> "forecast mass civilian killings for the upcoming quarter and year for each country globally"; <a href="#" onclick="openModal('US24-964');return false;">Mass Mobilization Model</a> predicted "mass mobilizations (protests and riots) for each country globally"; <a href="#" onclick="openModal('US24-963');return false;">Senturion Alpha</a> "identifies where key decision makers fall on an issue spectrum and who influences whom," simulating political dynamics to estimate influence. The 2025 retirement entries (<a href="#" onclick="openModal('US25-2852');return false;">US25-2852</a>, <a href="#" onclick="openModal('US25-2853');return false;">US25-2853</a>, <a href="#" onclick="openModal('US25-2854');return false;">US25-2854</a>) contain only the system names.
+        All three are listed as Not High-Impact, Retired, with no description, no rationale, and no operational history in the 2025 submission. All three were operated by the Bureau of Conflict and Stabilization Operations (CSO). The 2024 inventory — where all three appeared as active systems — provides context: <a href="#" onclick="openModal('US24-960');return false;">Violence Against Civilians Model</a> "forecast mass civilian killings for the upcoming quarter and year for each country globally"; <a href="#" onclick="openModal('US24-964');return false;">Mass Mobilization Model</a> predicted "mass mobilizations (protests and riots) for each country globally"; <a href="#" onclick="openModal('US24-963');return false;">Senturion Alpha</a> "identifies where key decision makers fall on an issue spectrum and who influences whom," simulating political dynamics to estimate influence. The 2025 retirement entries (<a href="#" onclick="openModal('US25-3935');return false;">US25-3935</a>, <a href="#" onclick="openModal('US25-3936');return false;">US25-3936</a>, <a href="#" onclick="openModal('US25-3937');return false;">US25-3937</a>) contain only the system names.
         <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — 2025 records US25-2852/2853/2854 (synthetic IDs; no agency IDs in source); 2024 descriptions in records US24-960, US24-963, US24-964</div>
     </div>
 
@@ -204,13 +204,10 @@
 
     let allData = [];
 
-    fetch('ai_data.json')
-        .then(r => r.json())
-        .then(data => { allData = data.items; });
-
     function openModal(id) {
         const item = allData.find(d => d.id === id);
         if (!item) { alert('Record ' + id + ' not found in loaded data.'); return; }
+        const permalink = window.location.origin + window.location.pathname + '?case=' + encodeURIComponent(id);
         const body = document.getElementById('modal-body');
         body.innerHTML = `
             <span style="display:inline-block;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);border-radius:4px;padding:0.2rem 0.6rem;font-size:0.8rem;margin-bottom:1rem;">${item.country} Registry (${item.year})</span>
@@ -228,18 +225,35 @@
                 <button onclick="copyRawRow(this,'${item.source_file}',${item.source_line_start},${item.source_line})"
                     style="font-size:0.75rem;padding:0.15rem 0.5rem;background:transparent;border:1px solid #818cf8;color:#818cf8;border-radius:4px;cursor:pointer;">Copy raw row</button>
             </p>
+            <p style="font-size:0.8rem;color:#94a3b8;margin-top:0.4rem;">
+                <strong>Permalink:</strong>
+                <input type="text" readonly value="${permalink}" onclick="this.select()"
+                    style="font-size:0.75rem;padding:0.15rem 0.4rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#94a3b8;border-radius:4px;width:60%;margin:0 0.3rem;">
+                <button onclick="navigator.clipboard.writeText('${permalink}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)})"
+                    style="font-size:0.75rem;padding:0.15rem 0.5rem;background:transparent;border:1px solid #818cf8;color:#818cf8;border-radius:4px;cursor:pointer;">Copy link</button>
+            </p>
         `;
         document.getElementById('recordModal').style.display = 'block';
+        history.pushState(null, null, '?case=' + encodeURIComponent(id));
         return false;
     }
 
     function closeModal() {
         document.getElementById('recordModal').style.display = 'none';
+        history.pushState(null, null, window.location.pathname);
     }
 
     window.onclick = (e) => {
         if (e.target === document.getElementById('recordModal')) closeModal();
     };
+
+    // Open modal from URL on page load
+    fetch('ai_data.json').then(r => r.json()).then(data => {
+        allData = data.items;
+        const params = new URLSearchParams(window.location.search);
+        const caseId = params.get('case');
+        if (caseId) openModal(caseId);
+    });
 </script>
 </body>
 </html>
