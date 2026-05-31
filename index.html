@@ -191,6 +191,10 @@
             outline: none;
             transition: border-color 0.2s;
         }
+        .search-box option {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
 
         .search-box:focus {
             border-color: var(--accent);
@@ -473,7 +477,11 @@
             <div class="summary-card">
                 <h3 style="font-size:1.1rem; cursor:pointer;" title="Click bars to filter!">Use Case Categories (AI
                     Capabilities) 🖱️</h3>
-                <canvas id="chart-categories" height="150"></canvas>
+                <div style="height: 300px; overflow-y: auto;">
+                    <div style="position: relative; height: 560px;">
+                        <canvas id="chart-categories"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -727,28 +735,33 @@
                     labels: catLabels,
                     datasets: [
                         {
-                            label: 'USA 2024 (% of total US-2024 cases)',
+                            label: 'USA 2024 (% of US-2024 total)',
                             data: catLabels.map(c => Math.round(((data.stats.categories_usa[c] || 0) / usaTotals) * 100)),
                             backgroundColor: '#3b82f6'
                         },
                         {
-                            label: 'USA 2025 (% of total US-2025 cases)',
+                            label: 'USA 2025 (% of US-2025 total)',
                             data: catLabels.map(c => Math.round(((data.stats.categories_us25[c] || 0) / us25Totals) * 100)),
                             backgroundColor: '#22c55e'
                         },
                         {
-                            label: 'Canada (% of total CA cases)',
+                            label: 'Canada (% of CA total)',
                             data: catLabels.map(c => Math.round(((data.stats.categories_ca[c] || 0) / caTotals) * 100)),
                             backgroundColor: '#ef4444'
                         }
                     ]
                 },
                 options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: true },
+                        legend: { display: true, labels: { color: '#f1f5f9', boxWidth: 12 } },
                         tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + c.raw + '%' } }
                     },
-                    scales: { y: { max: 100, ticks: { callback: (val) => val + '%' } } },
+                    scales: {
+                        x: { max: 100, ticks: { color: '#94a3b8', callback: (val) => val + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#f1f5f9' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             const idx = elements[0].index;
