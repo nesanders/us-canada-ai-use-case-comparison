@@ -479,8 +479,13 @@
 
         <div class="explorer-header">
             <h2>Case Explorer</h2>
-            <div class="filters" style="flex-wrap: wrap;">
-                <input type="text" id="ai-search" class="search-box" placeholder="Search for keywords...">
+            <div class="filters" style="flex-wrap: wrap; gap: 0.4rem;">
+                <input type="text" id="ai-search" class="search-box" placeholder='Search keywords — use OR: "translate OR translation"' style="flex: 1; min-width: 220px;">
+                <select id="category-filter" class="search-box" style="width: auto; padding: 0.4rem 0.7rem;">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div class="filters" style="flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem;">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="USA">US (all)</button>
                 <button class="filter-btn" data-filter="US2024">US 2024</button>
@@ -490,7 +495,9 @@
                     style="background:var(--accent); color:white; border-color:var(--accent); display:none;"
                     id="clear-filters-btn">Clear Chart Filters</button>
             </div>
-            <div style="width: 100%; margin-top: 5px; font-size: 0.85rem; color: var(--accent);"
+            <div style="width: 100%; margin-top: 6px; font-size: 0.82rem; color: var(--text-secondary);"
+                id="dataset-counts"></div>
+            <div style="width: 100%; margin-top: 2px; font-size: 0.85rem; color: var(--accent);"
                 id="active-filters-display"></div>
         </div>
 
@@ -586,9 +593,13 @@
 
         function toggleChartFilter(key, value) {
             if (chartFilters[key] === value) {
-                delete chartFilters[key]; // toggle off
+                delete chartFilters[key];
             } else {
                 chartFilters[key] = value;
+            }
+            // Keep category dropdown in sync with chart clicks
+            if (key === 'category') {
+                document.getElementById('category-filter').value = chartFilters.category || '';
             }
             updateActiveFiltersDisplay();
             renderGrid();
@@ -597,14 +608,32 @@
         document.getElementById('clear-filters-btn').onclick = () => {
             chartFilters = {};
             currentPage = 1;
+            document.getElementById('category-filter').value = '';
             updateActiveFiltersDisplay();
             renderGrid();
         };
 
         async function init() {
-            const response = await fetch('ai_data.json?v=20260531');
+            const response = await fetch('ai_data.json?v=20260531b');
             const data = await response.json();
             allData = data.items;
+
+            // Populate category dropdown from data
+            const allCats = [...new Set(allData.map(d => d.category))].sort();
+            const catSel = document.getElementById('category-filter');
+            allCats.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                catSel.appendChild(opt);
+            });
+            catSel.onchange = (e) => {
+                const val = e.target.value;
+                if (val) chartFilters.category = val; else delete chartFilters.category;
+                currentPage = 1;
+                updateActiveFiltersDisplay();
+                renderGrid();
+            };
 
             // Stats
             document.getElementById('stat-usa').innerText = data.stats.usa_count.toLocaleString();
@@ -808,27 +837,37 @@
             }
         }
 
+        function searchMatches(item, rawTerm) {
+            if (!rawTerm) return true;
+            // Support "term1 OR term2" — split on OR (case-insensitive), any term matching is a hit
+            const orTerms = rawTerm.toLowerCase().split(/\bor\b/).map(t => t.trim()).filter(Boolean);
+            const searchable = [item.name, item.agency, item.full_agency, item.description, item.category].join(' ').toLowerCase();
+            return orTerms.some(term => searchable.includes(term));
+        }
+
         function renderGrid() {
             const grid = document.getElementById('case-grid');
-            const searchTerm = document.getElementById('ai-search').value.toLowerCase();
+            const rawTerm = document.getElementById('ai-search').value;
 
             const filtered = allData.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
-                    item.agency.toLowerCase().includes(searchTerm) ||
-                    item.description.toLowerCase().includes(searchTerm) ||
-                    item.category.toLowerCase().includes(searchTerm);
+                const matchesSearch = searchMatches(item, rawTerm);
                 const matchesCountry = currentCountry === 'all'
                     || item.country === currentCountry
                     || (currentCountry === 'US2024' && item.country === 'USA' && item.year === '2024')
                     || (currentCountry === 'US2025' && item.country === 'USA' && item.year === '2025');
-
-                // Check chart filters
                 const matchesCategory = !chartFilters.category || item.category === chartFilters.category;
                 const matchesAgency = !chartFilters.agency || item.agency === chartFilters.agency;
                 const matchesYear = !chartFilters.year || (item.initiation_year && item.initiation_year.startsWith(chartFilters.year));
 
                 return matchesSearch && matchesCountry && matchesCategory && matchesAgency && matchesYear;
             });
+
+            // Dataset breakdown counts
+            const us24n = filtered.filter(i => i.country === 'USA' && i.year === '2024').length;
+            const us25n = filtered.filter(i => i.country === 'USA' && i.year === '2025').length;
+            const can  = filtered.filter(i => i.country === 'Canada').length;
+            document.getElementById('dataset-counts').textContent =
+                `Showing: US 2024 — ${us24n} · US 2025 — ${us25n} · Canada — ${can}`;
 
             // Pagination logic
             const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;

@@ -89,7 +89,9 @@ def categorize_use_case(text, description):
         return "Computer Vision"
     elif any(kw in text for kw in ["generative", "llm", "large language model", "chatbot", "chatgpt", "content generation", "summarization", "generate", "copilot", "assistant"]):
         return "Generative AI"
-    elif any(kw in text for kw in ["nlp", "natural language", "translation", "transcription", "speech", "text mining", "text analysis", "sentiment"]):
+    elif any(kw in text for kw in ["translat", "machine translation", "multilingual", "localization"]):
+        return "Machine Translation"
+    elif any(kw in text for kw in ["nlp", "natural language", "transcription", "speech", "text mining", "text analysis", "sentiment"]):
         return "Language Processing"
     elif any(kw in text for kw in ["predict", "forecast", "risk", "anomaly", "fraud", "analytics", "classification", "optimization", "regression", "machine learning", "analysis", "detection", "modeling", "cybersecurity", "security"]):
         return "Analytics & Security"

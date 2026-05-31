@@ -243,7 +243,7 @@
     };
 
     // Open modal from URL on page load
-    fetch('ai_data.json?v=20260531').then(r => r.json()).then(data => {
+    fetch('ai_data.json?v=20260531b').then(r => r.json()).then(data => {
         allData = data.items;
         const params = new URLSearchParams(window.location.search);
         const caseId = params.get('case');

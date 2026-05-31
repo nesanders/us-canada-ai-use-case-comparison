@@ -113,7 +113,7 @@ if (!recordId) {
     document.getElementById('content').innerHTML =
         '<div id="error-box">No record ID specified. Use <code>?id=RECORD_ID</code> in the URL.</div>';
 } else {
-    fetch('ai_data.json?v=20260531')
+    fetch('ai_data.json?v=20260531b')
         .then(r => r.json())
         .then(data => {
             const item = data.items.find(d => d.id === recordId);
