@@ -162,16 +162,13 @@ if (!recordId) {
                     <div class="raw-header">
                         <h2 style="border:none;padding:0;margin:0;">All Source Fields</h2>
                         ${item.source_file ? `
-                        <button type="button" class="btn" id="load-btn"
-                            onclick="loadRawFields('${item.source_file}', ${item.source_line_start}, ${item.source_line})">
-                            Load from CSV
-                        </button>
                         <span class="source-note">${item.source_file}, ${lineRef}</span>
                         ` : '<span class="source-note" style="color:#ef4444;">Source metadata unavailable — try reloading the page.</span>'}
                     </div>
-                    <div id="raw-fields"></div>
+                    <div id="raw-fields"><p style="color:#64748b;font-size:0.85rem;">Loading…</p></div>
                 </section>
             `;
+            if (item.source_file) loadRawFields(item.source_file, item.source_line_start, item.source_line);
         })
         .catch(() => {
             document.getElementById('content').innerHTML =
@@ -180,9 +177,7 @@ if (!recordId) {
 }
 
 async function loadRawFields(filename, lineStart, lineEnd) {
-    const btn = document.getElementById('load-btn');
-    btn.textContent = 'Fetching…';
-    btn.disabled = true;
+    const container = document.getElementById('raw-fields');
     try {
         const res = await fetch(RAW_URLS[filename]);
         const text = await res.text();
@@ -200,12 +195,9 @@ async function loadRawFields(filename, lineStart, lineEnd) {
             </tr>`;
         }).join('');
 
-        document.getElementById('raw-fields').innerHTML =
-            `<table class="raw-table"><tbody>${rows}</tbody></table>`;
-        btn.style.display = 'none';
+        container.innerHTML = `<table class="raw-table"><tbody>${rows}</tbody></table>`;
     } catch (e) {
-        btn.textContent = 'Error — retry';
-        btn.disabled = false;
+        container.innerHTML = '<p style="color:#ef4444;font-size:0.85rem;">Failed to load CSV — check network connection.</p>';
     }
 }
 </script>
