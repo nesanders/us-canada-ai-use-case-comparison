@@ -485,7 +485,7 @@
             </div>
         </div>
 
-        <div class="explorer-header">
+        <div class="explorer-header" id="case-explorer">
             <h2>Case Explorer</h2>
             <div class="filters" style="flex-wrap: wrap; gap: 0.4rem;">
                 <input type="text" id="ai-search" class="search-box" placeholder='Search keywords — use OR: "translate OR translation"' style="flex: 1; min-width: 220px;">
@@ -581,10 +581,57 @@
         let allData = [];
         let currentCountry = 'all';
         let chartFilters = {}; // e.g. { agency: 'DHS', year: '2023', category: 'Computer Vision' }
+        let initDone = false;
 
         // Pagination state
         let currentPage = 1;
         let itemsPerPage = 20;
+
+        function syncURLToState() {
+            if (!initDone) return;
+            if (document.getElementById('detailModal').style.display === 'block') return;
+            const params = new URLSearchParams();
+            const q = document.getElementById('ai-search').value;
+            if (q) params.set('q', q);
+            if (currentCountry !== 'all') params.set('country', currentCountry);
+            if (chartFilters.category) params.set('cat', chartFilters.category);
+            if (chartFilters.agency) params.set('agency', chartFilters.agency);
+            if (chartFilters.year) params.set('year', chartFilters.year);
+            const qs = params.toString();
+            history.replaceState(null, null, qs ? '?' + qs : window.location.pathname);
+        }
+
+        function restoreStateFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('case')) return; // case modal handled separately
+            let hasFilters = false;
+            const q = params.get('q');
+            if (q) { document.getElementById('ai-search').value = q; hasFilters = true; }
+            const country = params.get('country');
+            if (country) {
+                currentCountry = country;
+                document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === country);
+                });
+                hasFilters = true;
+            }
+            const cat = params.get('cat');
+            if (cat) {
+                chartFilters.category = cat;
+                document.getElementById('category-filter').value = cat;
+                hasFilters = true;
+            }
+            const agency = params.get('agency');
+            if (agency) { chartFilters.agency = agency; hasFilters = true; }
+            const year = params.get('year');
+            if (year) { chartFilters.year = year; hasFilters = true; }
+            if (hasFilters) {
+                currentPage = 1;
+                updateActiveFiltersDisplay();
+                renderGrid();
+                document.getElementById('case-explorer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
         function updateActiveFiltersDisplay() {
             const display = document.getElementById('active-filters-display');
@@ -848,6 +895,9 @@
             if (caseId && allData.find(d => d.id === caseId)) {
                 openModal(caseId);
             }
+
+            initDone = true;
+            restoreStateFromURL();
         }
 
         function searchMatches(item, rawTerm) {
@@ -892,6 +942,7 @@
             document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages} (${filtered.length} total)`;
             document.getElementById('btn-prev').disabled = currentPage === 1;
             document.getElementById('btn-next').disabled = currentPage === totalPages;
+            syncURLToState();
 
             grid.innerHTML = pagedData.map(item => `
             <div class="case-card" onclick="openModal('${item.id}')">
@@ -982,12 +1033,12 @@
 
         document.querySelector('.close').onclick = () => {
             document.getElementById('detailModal').style.display = "none";
-            history.pushState(null, null, window.location.pathname);
+            syncURLToState();
         };
         window.onclick = (event) => {
             if (event.target == document.getElementById('detailModal')) {
                 document.getElementById('detailModal').style.display = "none";
-                history.pushState(null, null, window.location.pathname);
+                syncURLToState();
             }
         };
 
