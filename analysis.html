@@ -74,11 +74,16 @@
             margin: 1.5rem 0;
         }
         footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
+        .chart-block { background: var(--card-bg); border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+        .chart-block h3 { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.8rem; }
+        .charts-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        @media (max-width: 600px) { .charts-2col { grid-template-columns: 1fr; } }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15,23,42,0.9); backdrop-filter: blur(8px); }
         .modal-inner { background-color: #1e293b; margin: 5% auto; padding: 2.5rem; border-radius: 1.5rem; width: 88%; max-width: 820px; max-height: 82vh; overflow-y: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: var(--text-main); position: relative; }
         .modal-close { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.8rem; cursor: pointer; color: var(--text-secondary); line-height: 1; }
         .modal-close:hover { color: var(--text-main); }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -88,13 +93,51 @@
         <p>An independent record-by-record review of all 3,611 disclosures under OMB M-25-21 &mdash; May 2026</p>
     </header>
 
-    <p>The Trump administration published the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">2025 Federal Agency AI Use Case Inventory</a> in April 2026. We reviewed every record across all 56 agencies. Findings below link directly to records where IDs exist; 704 records (19%) — covering HHS, State, TVA, ED, GSA, and SSA — were filed without unique identifiers, making individual citation impossible for those agencies.</p>
+    <p>The Trump administration published the <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">2025 Federal Agency AI Use Case Inventory</a> in April 2026. We reviewed every record across all 56 agencies. Findings below link directly to individual records; 704 records (19%) — covering HHS, State, TVA, ED, GSA, and SSA — were filed without agency-assigned identifiers, though all are addressable via synthetic row-position IDs assigned by this dashboard.</p>
 
     <div class="stat-row">
         <div class="stat-box"><div class="stat-num">3,611</div><div class="stat-label">Records reviewed</div></div>
         <div class="stat-box"><div class="stat-num">445</div><div class="stat-label">High-Impact designations</div></div>
         <div class="stat-box"><div class="stat-num">71.5%</div><div class="stat-label">High-Impact records missing required safeguard fields</div></div>
         <div class="stat-box"><div class="stat-num">704</div><div class="stat-label">Records with no unique ID</div></div>
+    </div>
+
+    <h2>Dataset Overview</h2>
+
+    <div class="chart-block">
+        <h3>Use Cases by Agency — 2025 Inventory (top 25)</h3>
+        <div style="position:relative; height:600px;">
+            <canvas id="chart-agency-vol"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-block">
+        <h3>High-Impact Classification Rate by Agency — 2025 (agencies with ≥ 10 records, sorted by rate)</h3>
+        <div style="position:relative; height:560px;">
+            <canvas id="chart-agency-hi"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-block">
+        <h3>AI Category Breakdown: 2024 vs. 2025 (raw record counts)</h3>
+        <div style="position:relative; height:320px;">
+            <canvas id="chart-cat-compare"></canvas>
+        </div>
+    </div>
+
+    <div class="charts-2col">
+        <div class="chart-block" style="margin-bottom:0;">
+            <h3>Development Stage — 2025</h3>
+            <div style="position:relative; height:220px;">
+                <canvas id="chart-stage"></canvas>
+            </div>
+        </div>
+        <div class="chart-block" style="margin-bottom:0;">
+            <h3>Impact Classification — 2025</h3>
+            <div style="position:relative; height:220px;">
+                <canvas id="chart-impact-dist"></canvas>
+            </div>
+        </div>
     </div>
 
     <h2>The High-Impact Framework Is Not Working</h2>
@@ -152,7 +195,7 @@
     <div class="finding">
         <strong>State Department retired three geopolitical AI systems — "Violence Against Civilians Model," "Mass Mobilization Model," and "Senturion Alpha" — with blank descriptions.</strong>
         All three are listed as Not High-Impact, Retired, with no description, no rationale, and no operational history in the 2025 submission. All three were operated by the Bureau of Conflict and Stabilization Operations (CSO). The 2024 inventory — where all three appeared as active systems — provides context: <a href="#" onclick="openModal('US24-960');return false;">Violence Against Civilians Model</a> "forecast mass civilian killings for the upcoming quarter and year for each country globally"; <a href="#" onclick="openModal('US24-964');return false;">Mass Mobilization Model</a> predicted "mass mobilizations (protests and riots) for each country globally"; <a href="#" onclick="openModal('US24-963');return false;">Senturion Alpha</a> "identifies where key decision makers fall on an issue spectrum and who influences whom," simulating political dynamics to estimate influence. The 2025 retirement entries (<a href="#" onclick="openModal('US25-3935');return false;">US25-3935</a>, <a href="#" onclick="openModal('US25-3936');return false;">US25-3936</a>, <a href="#" onclick="openModal('US25-3937');return false;">US25-3937</a>) contain only the system names.
-        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — 2025 records US25-2852/2853/2854 (synthetic IDs; no agency IDs in source); 2024 descriptions in records US24-960, US24-963, US24-964</div>
+        <div class="cite">Source: <a href="https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory" target="_blank">OMB 2025 Inventory</a> — 2025 records <a href="#" onclick="openModal('US25-3935');return false;">US25-3935</a>, <a href="#" onclick="openModal('US25-3936');return false;">US25-3936</a>, <a href="#" onclick="openModal('US25-3937');return false;">US25-3937</a> (synthetic row-position IDs; no agency IDs in source); 2024 descriptions in records <a href="#" onclick="openModal('US24-960');return false;">US24-960</a>, <a href="#" onclick="openModal('US24-963');return false;">US24-963</a>, <a href="#" onclick="openModal('US24-964');return false;">US24-964</a></div>
     </div>
 
     <h2>Multiple Major Agencies Filed Near-Blank Submissions</h2>
@@ -242,13 +285,143 @@
         if (e.target === document.getElementById('recordModal')) closeModal();
     };
 
-    // Open modal from URL on page load
+    // Open modal from URL on page load, then render charts
     fetch('ai_data.json?v=20260531b').then(r => r.json()).then(data => {
         allData = data.items;
         const params = new URLSearchParams(window.location.search);
         const caseId = params.get('case');
         if (caseId) openModal(caseId);
+        renderCharts(data.items);
     });
+
+    const CHART_DEFAULTS = {
+        plugins: { legend: { labels: { color: '#f1f5f9' } } },
+        scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+            y: { ticks: { color: '#f1f5f9' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+        }
+    };
+
+    function mergeChartDefaults(opts) {
+        return {
+            ...opts,
+            plugins: { ...CHART_DEFAULTS.plugins, ...(opts.plugins||{}) },
+            scales: {
+                x: { ...CHART_DEFAULTS.scales.x, ...(opts.scales||{}).x },
+                y: { ...CHART_DEFAULTS.scales.y, ...(opts.scales||{}).y }
+            }
+        };
+    }
+
+    function renderCharts(items) {
+        const us25 = items.filter(d => d.country === 'USA' && d.year === '2025');
+        const us24 = items.filter(d => d.country === 'USA' && d.year === '2024');
+
+        // ── Chart A: Volume by agency (top 25) ──────────────────────────────
+        const agencyCount = {};
+        us25.forEach(d => agencyCount[d.agency] = (agencyCount[d.agency] || 0) + 1);
+        const topAgencies = Object.entries(agencyCount)
+            .sort((a, b) => b[1] - a[1]).slice(0, 25);
+        new Chart(document.getElementById('chart-agency-vol'), {
+            type: 'bar',
+            data: {
+                labels: topAgencies.map(e => e[0]),
+                datasets: [{ label: 'Use cases', data: topAgencies.map(e => e[1]), backgroundColor: '#22c55e' }]
+            },
+            options: mergeChartDefaults({
+                indexAxis: 'y', maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#f1f5f9' } } }
+            })
+        });
+
+        // ── Chart B: High-Impact rate by agency ──────────────────────────────
+        const hiCount = {}, totCount = {};
+        us25.forEach(d => {
+            totCount[d.agency] = (totCount[d.agency] || 0) + 1;
+            if (d.impact === 'High-Impact' || d.impact === 'Presumed High-Impact')
+                hiCount[d.agency] = (hiCount[d.agency] || 0) + 1;
+        });
+        const hiAgencies = Object.keys(totCount)
+            .filter(a => totCount[a] >= 10)
+            .map(a => ({ agency: a, rate: ((hiCount[a] || 0) / totCount[a]) * 100, total: totCount[a] }))
+            .sort((a, b) => b.rate - a.rate);
+        new Chart(document.getElementById('chart-agency-hi'), {
+            type: 'bar',
+            data: {
+                labels: hiAgencies.map(e => `${e.agency} (n=${e.total})`),
+                datasets: [{
+                    label: '% High-Impact (incl. Presumed)',
+                    data: hiAgencies.map(e => +e.rate.toFixed(1)),
+                    backgroundColor: hiAgencies.map(e => e.rate === 0 ? '#ef4444' : e.rate < 5 ? '#f97316' : '#22c55e')
+                }]
+            },
+            options: mergeChartDefaults({
+                indexAxis: 'y', maintainAspectRatio: false,
+                plugins: { legend: { display: false },
+                    tooltip: { callbacks: { label: c => ` ${c.raw}%` } } },
+                scales: {
+                    x: { max: 100, ticks: { color: '#94a3b8', callback: v => v + '%' } },
+                    y: { ticks: { color: '#f1f5f9', font: { size: 11 } } }
+                }
+            })
+        });
+
+        // ── Chart C: Category comparison 2024 vs 2025 ───────────────────────
+        const cats24 = {}, cats25 = {};
+        us24.forEach(d => cats24[d.category] = (cats24[d.category] || 0) + 1);
+        us25.forEach(d => cats25[d.category] = (cats25[d.category] || 0) + 1);
+        const catLabels = [...new Set([...Object.keys(cats24), ...Object.keys(cats25)])]
+            .sort((a, b) => (cats25[b] || 0) - (cats25[a] || 0));
+        new Chart(document.getElementById('chart-cat-compare'), {
+            type: 'bar',
+            data: {
+                labels: catLabels,
+                datasets: [
+                    { label: '2024 (M-24-10)', data: catLabels.map(c => cats24[c] || 0), backgroundColor: '#3b82f6' },
+                    { label: '2025 (M-25-21)', data: catLabels.map(c => cats25[c] || 0), backgroundColor: '#22c55e' }
+                ]
+            },
+            options: mergeChartDefaults({
+                indexAxis: 'y', maintainAspectRatio: false,
+                plugins: { legend: { display: true, labels: { color: '#f1f5f9' } } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8' } },
+                    y: { ticks: { color: '#f1f5f9', font: { size: 11 } } }
+                }
+            })
+        });
+
+        // ── Chart D: Development stage distribution (2025) ───────────────────
+        const stageCounts = {};
+        us25.forEach(d => { const s = d.status || 'Unknown'; stageCounts[s] = (stageCounts[s] || 0) + 1; });
+        const stageEntries = Object.entries(stageCounts).sort((a, b) => b[1] - a[1]);
+        const stageColors = { 'Deployed': '#22c55e', 'Pilot': '#3b82f6', 'Pre-deployment': '#f59e0b', 'Retired': '#94a3b8', 'Unknown': '#475569' };
+        new Chart(document.getElementById('chart-stage'), {
+            type: 'doughnut',
+            data: {
+                labels: stageEntries.map(e => e[0]),
+                datasets: [{ data: stageEntries.map(e => e[1]), backgroundColor: stageEntries.map(e => stageColors[e[0]] || '#818cf8'), borderWidth: 0 }]
+            },
+            options: { maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#f1f5f9', font: { size: 11 } } } } }
+        });
+
+        // ── Chart E: Impact classification distribution (2025) ───────────────
+        const impactCounts = {};
+        us25.forEach(d => { impactCounts[d.impact] = (impactCounts[d.impact] || 0) + 1; });
+        const impactOrder = ['High-Impact', 'Presumed High-Impact', 'Not High-Impact', 'Not Disclosed'];
+        const impactColors = { 'High-Impact': '#22c55e', 'Presumed High-Impact': '#84cc16', 'Not High-Impact': '#f97316', 'Not Disclosed': '#94a3b8' };
+        new Chart(document.getElementById('chart-impact-dist'), {
+            type: 'doughnut',
+            data: {
+                labels: impactOrder.filter(k => impactCounts[k]),
+                datasets: [{ data: impactOrder.filter(k => impactCounts[k]).map(k => impactCounts[k]), backgroundColor: impactOrder.filter(k => impactCounts[k]).map(k => impactColors[k]), borderWidth: 0 }]
+            },
+            options: { maintainAspectRatio: false,
+                plugins: { legend: { position: 'right', labels: { color: '#f1f5f9', font: { size: 11 } } } } }
+        });
+    }
 </script>
 </body>
 </html>
