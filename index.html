@@ -880,13 +880,9 @@
                 <strong>Source:</strong> ${item.source_file}, line ${item.source_line_start === item.source_line ? item.source_line : item.source_line_start + '–' + item.source_line} &nbsp;
                 <button onclick="copyRawRow(this, '${item.source_file}', ${item.source_line_start}, ${item.source_line})"
                     style="font-size:0.75rem; padding:0.15rem 0.5rem; background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:4px; cursor:pointer;">Copy raw row</button>
-            </p>
-            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.4rem;">
-                <strong>Permalink:</strong>
-                <input type="text" readonly value="${window.location.origin}${window.location.pathname}?case=${encodeURIComponent(item.id)}" onclick="this.select()"
-                    style="font-size:0.75rem; padding:0.15rem 0.4rem; background:transparent; border:1px solid var(--border-color); color:var(--text-secondary); border-radius:4px; width:60%; margin:0 0.3rem;">
-                <button onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)})"
-                    style="font-size:0.75rem; padding:0.15rem 0.5rem; background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:4px; cursor:pointer;">Copy link</button>
+                &nbsp;
+                <a href="record.html?id=${encodeURIComponent(item.id)}" target="_blank"
+                    style="font-size:0.75rem; padding:0.15rem 0.5rem; background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:4px; cursor:pointer; text-decoration:none;">Full record ↗</a>
             </p>
         `;
 

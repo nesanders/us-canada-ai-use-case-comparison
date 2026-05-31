@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Use Case Record</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%230f172a'/><text y='72' x='50' text-anchor='middle' font-size='65' font-family='system-ui'>🤖</text></svg>">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0f172a; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; padding: 2rem 1rem; }
+        .container { max-width: 860px; margin: 0 auto; }
+
+        .nav { margin-bottom: 2rem; font-size: 0.9rem; color: #64748b; }
+        .nav a { color: #818cf8; text-decoration: none; }
+        .nav a:hover { text-decoration: underline; }
+
+        .record-id { font-family: monospace; font-size: 0.9rem; color: #64748b; margin-bottom: 0.4rem; }
+        h1 { font-size: 1.7rem; color: #f8fafc; line-height: 1.35; margin-bottom: 1rem; }
+        .badge { display: inline-block; background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); border-radius: 4px; padding: 0.2rem 0.6rem; font-size: 0.8rem; margin-right: 0.5rem; }
+        .badge-us { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.3); }
+
+        .permalink-bar { display: flex; align-items: center; gap: 0.6rem; margin: 1rem 0 2rem; }
+        .permalink-bar input { flex: 1; min-width: 0; font-size: 0.78rem; padding: 0.3rem 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8; border-radius: 4px; font-family: monospace; }
+        .permalink-bar button { flex-shrink: 0; font-size: 0.78rem; padding: 0.3rem 0.7rem; background: transparent; border: 1px solid #818cf8; color: #818cf8; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+        .permalink-bar button:hover { background: rgba(129,140,248,0.1); }
+
+        section { margin-bottom: 2.5rem; }
+        section > h2 { font-size: 0.78rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+
+        dl.fields { display: grid; grid-template-columns: minmax(160px, max-content) 1fr; gap: 0.15rem 1.5rem; }
+        dl.fields dt { color: #94a3b8; font-size: 0.82rem; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        dl.fields dd { color: #e2e8f0; font-size: 0.88rem; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); word-break: break-word; }
+
+        .description-box { background: rgba(255,255,255,0.03); border-left: 3px solid rgba(74,222,128,0.5); border-radius: 0 6px 6px 0; padding: 1rem 1.2rem; color: #f1f5f9; font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+
+        .raw-header { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .raw-header > * { margin-bottom: 0; }
+        .source-note { font-size: 0.78rem; color: #64748b; font-family: monospace; }
+        .btn { font-size: 0.8rem; padding: 0.35rem 0.85rem; background: transparent; border: 1px solid #818cf8; color: #818cf8; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: rgba(129,140,248,0.1); }
+        .btn:disabled { opacity: 0.5; cursor: default; }
+
+        #raw-fields { margin-top: 1rem; }
+        .raw-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+        .raw-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        .raw-table td { padding: 0.4rem 0.6rem; vertical-align: top; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .raw-table td.col-name { color: #94a3b8; font-family: monospace; white-space: nowrap; width: 38%; }
+        .raw-table td.col-val { color: #e2e8f0; white-space: pre-wrap; word-break: break-word; }
+        .raw-table td.col-empty { color: #475569; font-style: italic; }
+
+        #error-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 1.5rem; border-radius: 8px; }
+        code { font-family: monospace; background: rgba(255,255,255,0.08); padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="nav">
+        <a href="index.html">← Dashboard</a> &nbsp;·&nbsp; <a href="analysis.html">Analysis</a>
+    </div>
+    <div id="content"><p style="color:#64748b;">Loading…</p></div>
+</div>
+
+<script>
+const RAW_URLS = {
+    'us_inventory_published_2025_retrieved_2026-05-30.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/us_inventory_published_2025_retrieved_2026-05-30.csv',
+    'us_inventory_published_2024_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/us_inventory_published_2024_retrieved_2026-04-12.csv',
+    'ca_inventory_published_2025_retrieved_2026-04-12.csv': 'https://raw.githubusercontent.com/nesanders/us-canada-ai-use-case-comparison/main/ca_inventory_published_2025_retrieved_2026-04-12.csv',
+};
+
+// RFC 4180-compliant CSV field parser. Handles quoted fields with embedded commas,
+// double-quote escapes, and embedded newlines (for multi-line records).
+function parseCSVFields(text) {
+    const fields = [];
+    let field = '';
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+            if (ch === '"' && text[i + 1] === '"') { field += '"'; i++; }
+            else if (ch === '"') { inQuotes = false; }
+            else if (ch !== '\r') { field += ch; }
+        } else {
+            if (ch === '"') { inQuotes = true; }
+            else if (ch === ',') { fields.push(field); field = ''; }
+            else if (ch !== '\r' && ch !== '\n') { field += ch; }
+        }
+    }
+    fields.push(field);
+    return fields;
+}
+
+const FIELD_LABELS = {
+    id:            'Record ID',
+    name:          'System Name',
+    agency:        'Agency (abbr.)',
+    full_agency:   'Full Agency Name',
+    country:       'Country',
+    year:          'Inventory Year',
+    policy:        'Governing Policy',
+    status:        'Development Status',
+    impact:        'Impact Classification',
+    category:      'AI Category',
+    initiation_year: 'Date Initiated',
+    source_file:   'Source File',
+};
+
+const SUMMARY_KEYS = ['id','name','full_agency','agency','country','year','policy','status','impact','category','initiation_year','source_file'];
+
+const params = new URLSearchParams(window.location.search);
+const recordId = params.get('id');
+
+if (!recordId) {
+    document.getElementById('content').innerHTML =
+        '<div id="error-box">No record ID specified. Use <code>?id=RECORD_ID</code> in the URL.</div>';
+} else {
+    fetch('ai_data.json')
+        .then(r => r.json())
+        .then(data => {
+            const item = data.items.find(d => d.id === recordId);
+            if (!item) {
+                document.getElementById('content').innerHTML =
+                    `<div id="error-box">Record <code>${recordId}</code> not found in the dataset.</div>`;
+                return;
+            }
+
+            document.title = `${item.id} — ${item.name}`;
+
+            const lineRef = item.source_line_start === item.source_line
+                ? `line ${item.source_line}`
+                : `lines ${item.source_line_start}–${item.source_line}`;
+
+            const permalink = window.location.origin + window.location.pathname + '?id=' + encodeURIComponent(item.id);
+
+            const badgeClass = item.country === 'USA' ? 'badge badge-us' : 'badge';
+
+            const summaryRows = SUMMARY_KEYS
+                .filter(k => item[k] !== undefined)
+                .map(k => `<dt>${FIELD_LABELS[k] || k}</dt><dd>${item[k] || '—'}</dd>`)
+                .join('');
+
+            document.getElementById('content').innerHTML = `
+                <div class="record-id">${item.id}</div>
+                <h1>${item.name}</h1>
+                <span class="${badgeClass}">${item.country} Registry (${item.year})</span>
+
+                <div class="permalink-bar">
+                    <input type="text" readonly value="${permalink}" onclick="this.select()" title="Permalink to this record">
+                    <button onclick="navigator.clipboard.writeText(this.previousElementSibling.value).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy permalink',2000)})">Copy permalink</button>
+                </div>
+
+                <section>
+                    <h2>Summary</h2>
+                    <dl class="fields">${summaryRows}</dl>
+                </section>
+
+                <section>
+                    <h2>Description</h2>
+                    <div class="description-box">${item.description}</div>
+                </section>
+
+                <section>
+                    <div class="raw-header">
+                        <h2 style="border:none;padding:0;margin:0;">All Source Fields</h2>
+                        <button class="btn" id="load-btn"
+                            onclick="loadRawFields('${item.source_file}', ${item.source_line_start}, ${item.source_line})">
+                            Load from CSV
+                        </button>
+                        <span class="source-note">${item.source_file}, ${lineRef}</span>
+                    </div>
+                    <div id="raw-fields"></div>
+                </section>
+            `;
+        })
+        .catch(() => {
+            document.getElementById('content').innerHTML =
+                '<div id="error-box">Failed to load dataset.</div>';
+        });
+}
+
+async function loadRawFields(filename, lineStart, lineEnd) {
+    const btn = document.getElementById('load-btn');
+    btn.textContent = 'Fetching…';
+    btn.disabled = true;
+    try {
+        const res = await fetch(RAW_URLS[filename]);
+        const text = await res.text();
+        const lines = text.split('\n');
+        const headers = parseCSVFields(lines[0]);
+        const dataText = lines.slice(lineStart - 1, lineEnd).join('\n');
+        const values = parseCSVFields(dataText);
+
+        const rows = headers.map((h, i) => {
+            const v = (values[i] !== undefined) ? values[i] : '';
+            const isEmpty = v.trim() === '' || v === '[]';
+            return `<tr>
+                <td class="col-name">${h}</td>
+                <td class="${isEmpty ? 'col-empty' : 'col-val'}">${isEmpty ? '(empty)' : v}</td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('raw-fields').innerHTML =
+            `<table class="raw-table"><tbody>${rows}</tbody></table>`;
+        btn.style.display = 'none';
+    } catch (e) {
+        btn.textContent = 'Error — retry';
+        btn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>
