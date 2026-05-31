@@ -113,7 +113,7 @@ if (!recordId) {
     document.getElementById('content').innerHTML =
         '<div id="error-box">No record ID specified. Use <code>?id=RECORD_ID</code> in the URL.</div>';
 } else {
-    fetch('ai_data.json')
+    fetch('ai_data.json?v=20260531')
         .then(r => r.json())
         .then(data => {
             const item = data.items.find(d => d.id === recordId);
@@ -161,11 +161,13 @@ if (!recordId) {
                 <section>
                     <div class="raw-header">
                         <h2 style="border:none;padding:0;margin:0;">All Source Fields</h2>
-                        <button class="btn" id="load-btn"
+                        ${item.source_file ? `
+                        <button type="button" class="btn" id="load-btn"
                             onclick="loadRawFields('${item.source_file}', ${item.source_line_start}, ${item.source_line})">
                             Load from CSV
                         </button>
                         <span class="source-note">${item.source_file}, ${lineRef}</span>
+                        ` : '<span class="source-note" style="color:#ef4444;">Source metadata unavailable — try reloading the page.</span>'}
                     </div>
                     <div id="raw-fields"></div>
                 </section>
